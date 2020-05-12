@@ -1,0 +1,14 @@
+div {
+    margin-top: 1rem;
+}
+
+#card {
+    display: inline-flex;
+    width: auto; 
+    display: inline-block;
+    margin: 0.5rem;
+}
+
+#button {
+    margin: 5px;
+}
