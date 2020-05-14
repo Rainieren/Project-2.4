@@ -3,17 +3,20 @@ import { CommonModule } from '@angular/common';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { TablesComponent } from './tables/tables.component';
+import { OrdersComponent } from './orders/orders.component';
 
 @NgModule({
   declarations: [
     DashboardComponent, 
-    TablesComponent
+    TablesComponent, 
+    OrdersComponent
   ],
   imports: [
     CommonModule
   ],
   exports: [
-    DashboardComponent
+    DashboardComponent,
+    TablesComponent
   ]
 
 })

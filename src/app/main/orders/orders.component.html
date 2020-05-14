@@ -1,0 +1,15 @@
+<div class="container">
+    <ng-container *ngFor="let order of orders; let i = index">
+        <div class="card">
+            <div class="card-body">
+            <h5 class="card-title">Bestelling #{{ order.orderId }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Tafel {{ order.table }}</h6>
+            <ul *ngFor="let element of order.orders">
+                <li class="card-text list-item">{{ element }}</li>
+            </ul>
+            <button type="button" class="btn btn-outline-primary" (click)="serveOrder(order.orderId)">Serveer</button>
+            </div>
+        </div>
+    </ng-container>
+</div>
+<router-outlet></router-outlet>
