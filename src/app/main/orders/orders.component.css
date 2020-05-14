@@ -2,3 +2,22 @@ div.card {
     width: auto;
     margin-top: 1rem;
 }
+li.list-group-item {
+    width: 40%;
+}
+button.btn {
+    margin-top: 1rem;
+}
+h4 {
+    display: inline;
+}
+select {
+    display: inline;
+    width: 30%;
+    margin-left: 1rem;
+    margin-top: 1rem;
+}
+#filter-button {
+    margin-left: 1rem;
+    margin-top: 0;
+}

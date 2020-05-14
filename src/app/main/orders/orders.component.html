@@ -1,11 +1,29 @@
 <div class="container">
+    <form id="filter-div" #options="ngForm" (ngSubmit)="filterResults(options.value)">
+        <h4>Filter</h4>
+        <select class="form-control form-control-sm" name="filter" ngModel>
+            <option>Geen</option>
+            <option>Counter</option>
+            <option>Keuken</option>
+        </select>
+        <button type="submit" id="filter-button" class="btn btn-primary">Toepassen</button>
+    </form>
     <ng-container *ngFor="let order of orders; let i = index">
         <div class="card">
             <div class="card-body">
             <h5 class="card-title">Bestelling #{{ order.orderId }}</h5>
             <h6 class="card-subtitle mb-2 text-muted">Tafel {{ order.table }}</h6>
-            <ul *ngFor="let element of order.orders">
-                <li class="card-text list-item">{{ element }}</li>
+            <ul class="list-group list-group-flush">
+                <ng-container *ngFor="let item of order.orders"> 
+                    <li class="list-group-item" *ngIf="getCurrentFilter() == item.focus">
+                        {{ item.name }}<span class="badge badge-secondary badge-pill" style="float: right;">1</span>
+                    </li> 
+                </ng-container>
+                <ng-container *ngFor="let item of order.orders"> 
+                    <li class="list-group-item" *ngIf="getCurrentFilter() == null">
+                        {{ item.name }}<span class="badge badge-secondary badge-pill" style="float: right;">1</span>
+                    </li> 
+                </ng-container>
             </ul>
             <button type="button" class="btn btn-outline-primary" (click)="serveOrder(order.orderId)">Serveer</button>
             </div>
