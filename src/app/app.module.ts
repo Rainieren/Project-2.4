@@ -6,6 +6,9 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { TablesComponent } from './main/tables/tables.component';
+import { OrdersService } from './orders.service';
+import { MenuItemsService } from './menu-items.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -17,9 +20,15 @@ import { TablesComponent } from './main/tables/tables.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    NgbModule
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [
+    OrdersService,
+    MenuItemsService
+  ],
+  bootstrap: [
+    AppComponent
+  ]
 })
 export class AppModule { }

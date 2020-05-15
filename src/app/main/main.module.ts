@@ -5,12 +5,13 @@ import { FormsModule } from '@angular/forms';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { TablesComponent } from './tables/tables.component';
 import { OrdersComponent } from './orders/orders.component';
+import { AddOrderComponent } from './add-order/add-order.component';
 
 @NgModule({
   declarations: [
     DashboardComponent, 
     TablesComponent, 
-    OrdersComponent
+    OrdersComponent, AddOrderComponent
   ],
   imports: [
     CommonModule,
@@ -20,6 +21,5 @@ import { OrdersComponent } from './orders/orders.component';
     DashboardComponent,
     TablesComponent
   ]
-
 })
 export class MainModule { }

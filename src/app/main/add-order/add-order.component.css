@@ -1,0 +1,11 @@
+form.container {
+    margin-top: 1rem;
+}
+#toast {
+    position: absolute;
+    bottom: 0;
+    margin: 1rem;
+}
+div.form-check {
+    margin: 1rem;
+}

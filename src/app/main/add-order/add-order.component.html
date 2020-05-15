@@ -1,0 +1,24 @@
+<form class="container" #options="ngForm" (ngSubmit)="newOrder(options.value)">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="inputGroupSelect01">Tafel</label>
+        </div>
+        <select required class="custom-select" name="table" ngModel>
+            <ng-container *ngFor="let table of tables; let i = index">
+                <option>{{ table }}</option>
+            </ng-container>
+        </select>
+    </div>
+    <ng-container *ngFor="let menuItem of _menuItemsService.menuItems; let i = index">
+        <div class="form-check">
+            <input required class="form-check-input" type="checkbox" value="{{ menuItem.itemId }}" name="{{ menuItem.itemId }}" id="defaultCheck1" ngModel>
+            <label class="form-check-label" for="defaultCheck1">
+                {{ menuItem.name }}
+            </label>
+        </div>
+    </ng-container>
+    <button type="submit" class="btn btn-primary">Bestelling plaatsen</button>
+</form>
+<ngb-toast id="toast" class="bg-success text-light" *ngIf="show" [autohide]="false">
+    Bestelling succesvol toegevoegd!
+</ngb-toast>
