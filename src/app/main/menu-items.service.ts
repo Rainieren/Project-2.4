@@ -5,7 +5,7 @@ import { MenuItem } from 'src/app/main/menu-item';
   providedIn: 'root'
 })
 export class MenuItemsService {
-  menuItems: any;
+  menuItems: MenuItem[];
 
   constructor() {
     this.menuItems = [    
@@ -27,8 +27,6 @@ export class MenuItemsService {
         return element.name;
       }
     }
-
-    return null;
   }
 
   getFocus(item: number): string {
@@ -39,6 +37,15 @@ export class MenuItemsService {
         return element.focus;
       }
     }
-    return null;
+  }
+
+  getPrice(item: number): number {
+    for (let i = 0; i < this.menuItems.length; i++) {
+      const element = this.menuItems[i];
+      
+      if(element.itemId == item) {
+        return element.price;
+      }
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { OrdersService } from '../../orders.service';
-import { MenuItemsService } from '../../menu-items.service';
+import { OrdersService } from '../orders.service';
+import { MenuItemsService } from '../menu-items.service';
 
 @Component({
   selector: 'app-orders',

@@ -6,8 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { TablesComponent } from './main/tables/tables.component';
-import { OrdersService } from './orders.service';
-import { MenuItemsService } from './menu-items.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
@@ -21,11 +19,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    NgbModule
+    NgbModule 
   ],
   providers: [
-    OrdersService,
-    MenuItemsService
   ],
   bootstrap: [
     AppComponent

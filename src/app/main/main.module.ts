@@ -7,6 +7,10 @@ import { TablesComponent } from './tables/tables.component';
 import { OrdersComponent } from './orders/orders.component';
 import { AddOrderComponent } from './add-order/add-order.component';
 
+import { OrdersService } from './orders.service';
+import { TablesService } from './tables.service';
+import { MenuItemsService } from './menu-items.service';
+
 @NgModule({
   declarations: [
     DashboardComponent, 
@@ -20,6 +24,11 @@ import { AddOrderComponent } from './add-order/add-order.component';
   exports: [
     DashboardComponent,
     TablesComponent
+  ],
+  providers: [
+    OrdersService,
+    MenuItemsService,
+    TablesService
   ]
 })
 export class MainModule { }

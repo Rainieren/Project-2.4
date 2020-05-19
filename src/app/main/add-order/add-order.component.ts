@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { OrdersService } from '../../orders.service';
-import { MenuItemsService } from '../../menu-items.service';
+import { OrdersService } from '../orders.service';
+import { MenuItemsService } from '../menu-items.service';
+import { TablesService } from '../tables.service';
 
 @Component({
   selector: 'app-add-order',
@@ -11,7 +12,7 @@ export class AddOrderComponent implements OnInit {
   tables: number[];
   show = false;
 
-  constructor(public _ordersService: OrdersService, public _menuItemsService: MenuItemsService) { 
+  constructor(public _ordersService: OrdersService, public _menuItemsService: MenuItemsService, public _tablesService: TablesService) { 
     this.tables = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   }
 
@@ -23,10 +24,10 @@ export class AddOrderComponent implements OnInit {
     for (let i = 1; i < this._menuItemsService.menuItems.length + 1; i++) {
       if(value[i] == true) {
         items.push(i);
-        console.log(i);
       }
     }
     this._ordersService.createOrder({table: value.table, items: items});
+    this._tablesService.addOrder(value.table, items);
     this.show = true;
     this.close();
   }
