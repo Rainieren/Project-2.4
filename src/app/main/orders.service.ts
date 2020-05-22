@@ -45,4 +45,12 @@ export class OrdersService implements OnInit {
 
     return false;
   }
+
+  getOrder(tableNumber: number) {
+    for (var i = this.orders.length - 1; i >= 0; i--) {
+      if(this.orders[i].table == tableNumber) {
+        return this.orders[i].orders;
+      }
+    }
+  }
 }

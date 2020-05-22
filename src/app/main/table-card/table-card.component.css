@@ -10,3 +10,6 @@ div {
 #button {
     margin: 5px;
 }
+p#card {
+    display: inline-flex;
+}
