@@ -1,0 +1,5 @@
+<div class="container">
+    <ng-container *ngFor="let table of _tableService.tables; let i index">
+        <app-table-card [tableNumber]="table.tableNumber"></app-table-card>
+    </ng-container>
+</div>

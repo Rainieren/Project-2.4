@@ -7,12 +7,14 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { TablesComponent } from './main/tables/tables.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TableCardComponent } from './main/table-card/table-card.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     TablesComponent,
+    TableCardComponent,
     routingComponents
   ],
   imports: [

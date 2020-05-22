@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Tafel {{ tableNumber }} <span *ngIf="hasWaitingOrder" class="badge badge-info">Wachtende bestelling</span></h5>
+            <p class="card-text">&euro; {{ _tableService.getTotalPriceOfTable(tableNumber) }}</p>
+            <p>
+                <button type="button" class="btn btn-outline-primary" (click)="isCollapsed = !isCollapsed"
+                        [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+                    Bestellingen
+                </button>
+            </p>
+            <div id="collapseExample" [ngbCollapse]="isCollapsed">
+                <div class="card">
+                    <div class="card-body">
+                        <p *ngIf="orders.length == 0">Nog geen bestellingen</p>
+                        <ul *ngFor="let order of orders">
+                            <li>{{ _menuItemService.getMenuItem(order) }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
