@@ -21,13 +21,23 @@ export class AddOrderComponent implements OnInit {
 
   newOrder(value) {
     let items = [];
-    for (let i = 1; i < this._menuItemsService.menuItems.length + 1; i++) {
-      if(value[i] == true) {
-        items.push(i);
+    let itemCounter = 0;
+
+    for(var key in value) {
+      if(value[key] != "" && key != "table") {
+        items.push({itemId: itemCounter, amount: value[key]});
+        itemCounter++;
+      } 
+
+      if(value[key] == "" && key != "table") {
+        items.push({itemId: itemCounter, amount: 0});
+        itemCounter++;
       }
     }
+    
     this._ordersService.createOrder({table: value.table, items: items});
     this._tablesService.addOrder(value.table, items);
+
     this.show = true;
     this.close();
   }

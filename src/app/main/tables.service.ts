@@ -23,15 +23,37 @@ export class TablesService {
   }
 
   addOrder(tableNumber: number, order: any[]): void {
-    for (let i = 0; i < this.tables.length; i++) {
-      const element = this.tables[i];
-      if(tableNumber == element.tableNumber) {
-        for (let j = 0; j < order.length; j++) {
-          element.orders.push(order[j])
+    const index = tableNumber - 1;
+    
+    if(this.tables[index].orders.length == 0) {
+      for(let i = 0; i < this.tables.length; i++) {
+        const element = this.tables[i];
+        if(tableNumber == element.tableNumber) {
+          for(let j = 0; j < order.length; j++) {
+            element.orders.push(order[j])
+          }
+        }
+      }
+    } else {
+      for(let i = 0; i < this.tables.length; i++) {
+        const element = this.tables[i];
+        
+        if(tableNumber == element.tableNumber) {
+
+          for(let j = 0; j < element.orders.length; j++) {
+            const tableOrders = element.orders[j];
+
+            for(let k = 0; k < order.length; k++) {
+              const currentOrder = order[k];
+
+              if(currentOrder.itemId == tableOrders.itemId) {
+                tableOrders.amount += currentOrder.amount;
+              }
+            }
+          } 
         }
       }
     }
-    console.log(tableNumber + ": " + this.getTotalPriceOfTable(tableNumber));
   }
 
   getListOfAllItemsOfTable(tableNumber: number): [] {
@@ -54,8 +76,13 @@ export class TablesService {
 
       if(tableNumber == element.tableNumber) {
         for (let j = 0; j < element.orders.length; j++) {
-          const MenuItem = element.orders[j];
-          price += this._menuItemService.getPrice(MenuItem);
+
+          if(element.orders[j].amount != 0) {
+
+            for (let k = 0; k < element.orders[j].amount; k++) {
+              price += this._menuItemService.getPrice(element.orders[j].itemId); 
+            }
+          }
         }
       }
     }

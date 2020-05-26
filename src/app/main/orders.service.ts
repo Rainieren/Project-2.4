@@ -34,6 +34,7 @@ export class OrdersService implements OnInit {
 
     this.orders.push({orderId: order, table: newOrder.table, orders: newOrder.items});
     this.orderCounter++;
+    console.log(this.orders);
   }
 
   getTableHasOrder(tableNumber: number): boolean {

@@ -22,7 +22,9 @@
                     <div class="card-body">
                         <p *ngIf="orders.length == 0">Nog geen bestellingen</p>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item" *ngFor="let order of orders">{{ _menuItemService.getMenuItem(order) }}</li>
+                            <ng-container *ngFor="let order of orders">
+                                <li class="list-group-item" *ngIf="order.amount != 0">{{ _menuItemService.getMenuItem(order.itemId) }}<span class="badge badge-secondary badge-pill" style="float: right;">{{ order.amount }}</span></li>
+                            </ng-container>
                         </ul>
                     </div>
                 </div>
@@ -31,7 +33,9 @@
                 <div class="card">
                     <div class="card-body">
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item" *ngFor="let order of waitingOrders">{{ _menuItemService.getMenuItem(order) }}</li>
+                            <ng-container *ngFor="let order of waitingOrders">
+                                <li class="list-group-item" *ngIf="order.amount != 0">{{ _menuItemService.getMenuItem(order.itemId) }}<span class="badge badge-secondary badge-pill" style="float: right;">{{ order.amount }}</span></li>
+                            </ng-container>
                         </ul>
                     </div>
                 </div>

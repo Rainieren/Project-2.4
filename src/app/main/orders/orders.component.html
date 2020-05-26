@@ -8,20 +8,20 @@
         </select>
         <button type="submit" id="filter-button" class="btn btn-primary">Toepassen</button>
     </form>
-    <ng-container *ngFor="let order of _ordersService.orders; let i = index">
+    <ng-container *ngFor="let order of orders; let i = index">
         <div class="card">
             <div class="card-body">
             <h5 class="card-title">Bestelling #{{ order.orderId }}</h5>
             <h6 class="card-subtitle mb-2 text-muted">Tafel {{ order.table }}</h6>
             <ul class="list-group list-group-flush">
                 <ng-container *ngFor="let item of order.orders"> 
-                    <li class="list-group-item" *ngIf="getCurrentFilter() == _menuItemsService.getFocus(item)">
-                        {{ _menuItemsService.getMenuItem(item) }}<span class="badge badge-secondary badge-pill" style="float: right;">1</span>
+                    <li class="list-group-item" *ngIf="getCurrentFilter() == _menuItemsService.getFocus(item.itemId) && item.amount != 0">
+                        {{ _menuItemsService.getMenuItem(item.itemId) }}<span class="badge badge-secondary badge-pill" style="float: right;">{{ item.amount }}</span>
                     </li> 
                 </ng-container>
                 <ng-container *ngFor="let item of order.orders"> 
-                    <li class="list-group-item" *ngIf="getCurrentFilter() == null">
-                        {{ _menuItemsService.getMenuItem(item) }}<span class="badge badge-secondary badge-pill" style="float: right;">1</span>
+                    <li class="list-group-item" *ngIf="getCurrentFilter() == null && item.amount != 0">
+                        {{ _menuItemsService.getMenuItem(item.itemId) }}<span class="badge badge-secondary badge-pill" style="float: right;">{{ item.amount }}</span>
                     </li> 
                 </ng-container>
             </ul>
