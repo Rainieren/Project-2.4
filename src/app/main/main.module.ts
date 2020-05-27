@@ -10,12 +10,17 @@ import { AddOrderComponent } from './add-order/add-order.component';
 import { OrdersService } from './orders.service';
 import { TablesService } from './tables.service';
 import { MenuItemsService } from './menu-items.service';
+import { OverviewTablesComponent } from './overview-tables/overview-tables.component';
+import { TableCardComponent } from './table-card/table-card.component';
 
 @NgModule({
   declarations: [
     DashboardComponent, 
     TablesComponent, 
-    OrdersComponent, AddOrderComponent
+    OrdersComponent, 
+    AddOrderComponent, 
+    OverviewTablesComponent, 
+    TableCardComponent
   ],
   imports: [
     CommonModule,

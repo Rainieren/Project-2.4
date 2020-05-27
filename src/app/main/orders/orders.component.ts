@@ -15,6 +15,8 @@ export class OrdersComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    //console.log(this._ordersService.orders);
+    this.orders = this._ordersService.orders;
   }
 
   serveOrder(OrderId: number): void {

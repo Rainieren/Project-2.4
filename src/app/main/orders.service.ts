@@ -34,5 +34,24 @@ export class OrdersService implements OnInit {
 
     this.orders.push({orderId: order, table: newOrder.table, orders: newOrder.items});
     this.orderCounter++;
+    console.log(this.orders);
+  }
+
+  getTableHasOrder(tableNumber: number): boolean {
+    for (var i = this.orders.length - 1; i >= 0; i--) {
+      if(this.orders[i].table == tableNumber) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  getOrder(tableNumber: number) {
+    for (var i = this.orders.length - 1; i >= 0; i--) {
+      if(this.orders[i].table == tableNumber) {
+        return this.orders[i].orders;
+      }
+    }
   }
 }

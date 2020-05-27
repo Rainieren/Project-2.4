@@ -9,14 +9,14 @@ export class MenuItemsService {
 
   constructor() {
     this.menuItems = [    
-      {itemId: 1, name: "Cola", ingredients: "Water", price: 2.99, focus: "counter"},
-      {itemId: 2, name: "Hamburger", ingredients: "Rundvlees", price: 12.99, focus: "kitchen"},
-      {itemId: 3, name: "Ijsje", ingredients: "Softijs", price: 4.99, focus: "counter"},
-      {itemId: 4, name: "Sinas", ingredients: "Water", price: 2.99, focus: "counter"},
-      {itemId: 5, name: "Schnitzel", ingredients: "Vlees", price: 12.99, focus: "kitchen"},
-      {itemId: 6, name: "Koffie", ingredients: "Koffiebonen", price: 2.99, focus: "counter"},
-      {itemId: 7, name: "Cappuccino", ingredients: "Koffiebonen", price: 12.99, focus: "counter"},
-      {itemId: 8, name: "Appelgebak", ingredients: "Appel", price: 4.99, focus: "kitchen"}
+      {itemId: 0, name: "Cola", ingredients: "Water", price: 2.99, focus: "counter"},
+      {itemId: 1, name: "Hamburger", ingredients: "Rundvlees", price: 12.99, focus: "kitchen"},
+      {itemId: 2, name: "Ijsje", ingredients: "Softijs", price: 4.99, focus: "counter"},
+      {itemId: 3, name: "Sinas", ingredients: "Water", price: 2.99, focus: "counter"},
+      {itemId: 4, name: "Schnitzel", ingredients: "Vlees", price: 12.99, focus: "kitchen"},
+      {itemId: 5, name: "Koffie", ingredients: "Koffiebonen", price: 2.99, focus: "counter"},
+      {itemId: 6, name: "Cappuccino", ingredients: "Koffiebonen", price: 12.99, focus: "counter"},
+      {itemId: 7, name: "Appelgebak", ingredients: "Appel", price: 4.99, focus: "kitchen"}
     ]
   }
 
