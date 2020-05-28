@@ -8,6 +8,8 @@ import { HeaderComponent } from './header/header.component';
 import { TablesComponent } from './main/tables/tables.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TableCardComponent } from './main/table-card/table-card.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,8 @@ import { TableCardComponent } from './main/table-card/table-card.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    NgbModule 
+    NgbModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }) 
   ],
   providers: [
   ],
