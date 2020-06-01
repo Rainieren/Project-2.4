@@ -9,5 +9,12 @@ export class HeaderComponent {
 
   constructor() { }
 
+  isOnline(): boolean {
+    if(!navigator.onLine) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
 }
