@@ -8,6 +8,7 @@ import { HeaderComponent } from './header/header.component';
 import { TablesComponent } from './main/tables/tables.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TableCardComponent } from './main/table-card/table-card.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -15,13 +16,14 @@ import { TableCardComponent } from './main/table-card/table-card.component';
     HeaderComponent,
     TablesComponent,
     TableCardComponent,
-    routingComponents
+    routingComponents,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    NgbModule 
+    NgbModule,
+    HttpClientModule, 
   ],
   providers: [
   ],

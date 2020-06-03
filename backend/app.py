@@ -1,8 +1,12 @@
-from flask import Flask
+from flask import Flask, json
 from flask import jsonify
 from flask import request
+from flask_cors import CORS, cross_origin
+import sys
 
 app = Flask(__name__)
+CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 recipes = [
     {'name': 'Pizza Hawai', 'price': '3,50', 'type': "pizza"},
@@ -26,12 +30,17 @@ quarks = [{'name': 'up', 'charge': '+2/3'},
           {'name': 'charm', 'charge': '+2/3'},
           {'name': 'strange', 'charge': '-1/3'}]
 
+orders = []
+
 
 @app.route('/api/get_all_products', methods=['GET'])
 def return_all():
-    return jsonify({'quarks': quarks})
+    response = jsonify({'products': recipes})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 
+'''
 @app.route('/api/get_one_product/<string:name>', methods=['GET'])
 def return_one(name):
     the_one = quarks[0]
@@ -89,6 +98,17 @@ def get_recipes_by_name(name):
 @app.route('/api/recipes', methods=['GET'])
 def get_recipes():
     return jsonify({'recipes': recipes})
+
+'''
+@app.route('/api/add_new_order', methods=['POST'])
+@cross_origin()
+def add_new_order():
+    data = request.get_json()
+    print(data, file=sys.stdout)
+    orders.append(data)
+    response = jsonify({'message': 'OK'})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 
 if __name__ == "__main__":

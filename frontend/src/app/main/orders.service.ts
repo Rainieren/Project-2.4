@@ -1,6 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Order } from 'src/app/main/order';
 import { Observable, of } from 'rxjs';
+import { HttpApiService } from './http-api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,11 +10,12 @@ export class OrdersService implements OnInit {
   orders: Order[];
   orderCounter = 1;
 
-  constructor() { 
+  constructor(private _httpApiService: HttpApiService) { 
     this.orders = [];
   }
 
   ngOnInit(): void {
+
   }
 
   serveOrder(OrderId: number): void {
@@ -30,11 +32,12 @@ export class OrdersService implements OnInit {
   }
 
   createOrder(newOrder) {
-    let order = this.orderCounter;
+    let orderNumber = this.orderCounter;
+    let order = {orderId: orderNumber, table: newOrder.table, orders: newOrder.items};
 
-    this.orders.push({orderId: order, table: newOrder.table, orders: newOrder.items});
+    this.orders.push(order);
     this.orderCounter++;
-    console.log(this.orders);
+    this._httpApiService.sendNewOrder(order);
   }
 
   getTableHasOrder(tableNumber: number): boolean {

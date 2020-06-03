@@ -12,6 +12,7 @@ import { TablesService } from './tables.service';
 import { MenuItemsService } from './menu-items.service';
 import { OverviewTablesComponent } from './overview-tables/overview-tables.component';
 import { TableCardComponent } from './table-card/table-card.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { TableCardComponent } from './table-card/table-card.component';
   imports: [
     CommonModule,
     FormsModule,
+    HttpClientModule
   ],
   exports: [
     DashboardComponent,
