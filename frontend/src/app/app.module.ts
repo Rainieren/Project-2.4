@@ -11,6 +11,9 @@ import { TableCardComponent } from './main/table-card/table-card.component';
 
 import { JwtModule } from '@auth0/angular-jwt';
 import { HttpClientModule } from '@angular/common/http';
+import { LoginComponent } from './auth/login/login.component';
+import { AuthService } from './auth/auth.service';
+import { AuthGuard } from './auth/auth.guard';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -22,7 +25,8 @@ export function tokenGetter() {
     HeaderComponent,
     TablesComponent,
     TableCardComponent,
-    routingComponents
+    routingComponents,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -39,6 +43,8 @@ export function tokenGetter() {
     }),
   ],
   providers: [
+    AuthService,
+    AuthGuard,
   ],
   bootstrap: [
     AppComponent
