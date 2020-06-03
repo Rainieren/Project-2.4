@@ -10,7 +10,9 @@ import { AuthService } from '../auth.service';
 
 //TODO: remove OnInit?
 export class LoginComponent {
-  public username: string;
+  //public username: string;
+  //default counter
+  public department: string = "counter";
   public password: string;
   public errorMsg: string;
 
@@ -19,16 +21,20 @@ export class LoginComponent {
   
   onSubmit() {
     //Call auth.login, act on result
-    this.auth.login(this.username, this.password)
+    this.auth.login(this.department, this.password)
     .subscribe(
       result => this.router.navigate(['dashboard']),
       err => this.errorMsg = 'Uw gebruikersnaam of wachtwoord is incorrect...'
     );
       
-    console.log(this.username);
+    console.log(this.department);
     console.log(this.password);
 
   }
-  
+
+  //change selected department 
+  departmentChanged (event: any) {
+    this.department = event.target.value;
+  }
 
 }
