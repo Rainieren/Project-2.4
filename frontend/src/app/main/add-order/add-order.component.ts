@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { OrdersService } from '../orders.service';
 import { MenuItemsService } from '../menu-items.service';
 import { TablesService } from '../tables.service';
+import { HttpApiService } from '../http-api.service';
 
 @Component({
   selector: 'app-add-order',
@@ -9,14 +10,17 @@ import { TablesService } from '../tables.service';
   styleUrls: ['./add-order.component.css']
 })
 export class AddOrderComponent implements OnInit {
-  tables: number[];
+  tables: any;
   show = false;
 
-  constructor(public _ordersService: OrdersService, public _menuItemsService: MenuItemsService, public _tablesService: TablesService) { 
-    this.tables = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  }
+  constructor(
+    public _ordersService: OrdersService, 
+    public _menuItemsService: MenuItemsService, 
+    public _tablesService: TablesService, 
+    ) { }
 
   ngOnInit(): void {
+    
   }
 
   newOrder(value) {

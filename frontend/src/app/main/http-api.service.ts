@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
+export interface Table {
+  tableNumber: number;
+  orders: [];
+}
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +17,8 @@ export class HttpApiService {
 
   }
 
-  async getProducts() {
-    let result = await this.http.get(this.rootUrl + "/get_all_products").toPromise();
-
-    return result;
+  async getProductsFromServer() {
+    return await this.http.get(this.rootUrl + "/get_all_products").toPromise();
   }
 
   async sendNewOrder(order) {
@@ -29,6 +29,10 @@ export class HttpApiService {
     }).subscribe(data => {
       console.log(data);
     });
+  }
+
+  async getTablesFromServer() {
+    return await this.http.get(this.rootUrl + "/get_all_tables").toPromise();
   }
 
 

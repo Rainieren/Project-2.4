@@ -1,25 +1,22 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { MenuItemsService } from './menu-items.service';
+import { HttpApiService } from './http-api.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TablesService {
+export class TablesService implements OnInit {
   tables: any;
+  rootUrl: string = "http://localhost:5000/api"
+ 
+  constructor(private _httpApiService: HttpApiService, public _menuItemService: MenuItemsService) {
+    this._httpApiService.getTablesFromServer().then(data => {
+      this.tables = data['tables'];
+    })
+  }
 
-  constructor(public _menuItemService: MenuItemsService) {
-    this.tables = [
-      { tableNumber: 1, orders: [] },
-      { tableNumber: 2, orders: [] },
-      { tableNumber: 3, orders: [] },
-      { tableNumber: 4, orders: [] },
-      { tableNumber: 5, orders: [] },
-      { tableNumber: 6, orders: [] },
-      { tableNumber: 7, orders: [] },
-      { tableNumber: 8, orders: [] },
-      { tableNumber: 9, orders: [] },
-      { tableNumber: 10, orders: [] },
-    ]
+  ngOnInit(): void {
+
   }
 
   addOrder(tableNumber: number, order: any[]): void {

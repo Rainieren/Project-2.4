@@ -8,21 +8,36 @@ app = Flask(__name__)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+tables = [
+    {'tableNumber': 1, 'orders': []},
+    {'tableNumber': 2, 'orders': []},
+    {'tableNumber': 3, 'orders': []},
+    {'tableNumber': 4, 'orders': []},
+    {'tableNumber': 5, 'orders': []},
+    {'tableNumber': 6, 'orders': []},
+    {'tableNumber': 7, 'orders': []},
+    {'tableNumber': 8, 'orders': []},
+    {'tableNumber': 9, 'orders': []},
+    {'tableNumber': 10, 'orders': []},
+]
+
 recipes = [
-    {'name': 'Pizza Hawai', 'price': '3,50', 'type': "pizza"},
-    {'name': 'Pizza Salami', 'price': '4,50', 'type': "pizza"},
-    {'name': 'Pizza Pepperoni', 'price': '5,50', 'type': "pizza"},
-    {'name': 'Pizza Tonijn', 'price': '5,00', 'type': "pizza"},
-    {'name': 'Pizza Shoarma', 'price': '4,00', 'type': "pizza"},
-    {'name': 'Pizza Kebab', 'price': '4,75', 'type': "pizza"},
-    {'name': 'Broodje Kip', 'price': '2,25', 'type': "brood"},
-    {'name': 'Broodje Warmvlees', 'price': '3,00', 'type': "brood"},
-    {'name': 'Broodje Gehaktbal', 'price': '2,50', 'type': "brood"},
-    {'name': 'Broodje Shoarma', 'price': '2,75', 'type': "brood"},
-    {'name': 'Broodje Kaas', 'price': '1,75', 'type': "brood"},
-    {'name': 'Broodje Vis', 'price': '3,00', 'type': "brood"},
-    {'name': 'Broodje Hotdog', 'price': '2,50', 'type': "brood"},
-    {'name': 'Broodje Jam', 'price': '1,50', 'type': "brood"},
+    {'name': 'Pizza Hawai', 'price': 3.50, 'type': "pizza"},
+    {'name': 'Pizza Salami', 'price': 4.50, 'type': "pizza"},
+    {'name': 'Pizza Pepperoni', 'price': 5.50, 'type': "pizza"},
+    {'name': 'Pizza Tonijn', 'price': 5.00, 'type': "pizza"},
+    {'name': 'Pizza Shoarma', 'price': 4.00, 'type': "pizza"},
+    {'name': 'Pizza Kebab', 'price': 4.75, 'type': "pizza"},
+    {'name': 'Broodje Kip', 'price': 2.25, 'type': "brood"},
+    {'name': 'Broodje Warmvlees', 'price': 3.00, 'type': "brood"},
+    {'name': 'Broodje Gehaktbal', 'price': 2.50, 'type': "brood"},
+    {'name': 'Broodje Shoarma', 'price': 2.75, 'type': "brood"},
+    {'name': 'Broodje Kaas', 'price': 1.75, 'type': "brood"},
+    {'name': 'Broodje Vis', 'price': 3.00, 'type': "brood"},
+    {'name': 'Broodje Hotdog', 'price': 2.50, 'type': "brood"},
+    {'name': 'Broodje Jam', 'price': 1.50, 'type': "brood"},
+    {'name': 'Koffie', 'price': 1.50, 'type': "drinken"},
+    {'name': 'Thee', 'price': 1.50, 'type': "drinken"},
 ]
 
 quarks = [{'name': 'up', 'charge': '+2/3'},
@@ -36,6 +51,13 @@ orders = []
 @app.route('/api/get_all_products', methods=['GET'])
 def return_all():
     response = jsonify({'products': recipes})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+
+@app.route('/api/get_all_tables', methods=['GET'])
+def return_all_tables():
+    response = jsonify({'tables': tables})
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
@@ -104,7 +126,7 @@ def get_recipes():
 @cross_origin()
 def add_new_order():
     data = request.get_json()
-    print(data, file=sys.stdout)
+    print(data)
     orders.append(data)
     response = jsonify({'message': 'OK'})
     response.headers.add('Access-Control-Allow-Origin', '*')

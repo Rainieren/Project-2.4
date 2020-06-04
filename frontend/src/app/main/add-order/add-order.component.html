@@ -4,8 +4,8 @@
           <label class="input-group-text" for="inputGroupSelect01">Tafel</label>
         </div>
         <select required class="custom-select form-control-lg" name="table" ngModel>
-            <ng-container *ngFor="let tableNumber of tables; let i = index">
-                <option>{{ tableNumber }}</option>
+            <ng-container *ngFor="let table of _tablesService.tables; let i = index">
+                <option>{{ table.tableNumber }}</option>
             </ng-container>
         </select>
     </div>

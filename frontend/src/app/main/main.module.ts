@@ -13,6 +13,7 @@ import { MenuItemsService } from './menu-items.service';
 import { OverviewTablesComponent } from './overview-tables/overview-tables.component';
 import { TableCardComponent } from './table-card/table-card.component';
 import { HttpClientModule } from '@angular/common/http';
+import { HttpApiService } from './http-api.service';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import { HttpClientModule } from '@angular/common/http';
     OrdersComponent, 
     AddOrderComponent, 
     OverviewTablesComponent, 
-    TableCardComponent
+    TableCardComponent,
   ],
   imports: [
     CommonModule,
@@ -30,12 +31,13 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   exports: [
     DashboardComponent,
-    TablesComponent
+    TablesComponent,
   ],
   providers: [
     OrdersService,
     MenuItemsService,
-    TablesService
+    TablesService,
+    HttpApiService,
   ]
 })
 export class MainModule { }

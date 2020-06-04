@@ -9,10 +9,10 @@ export class MenuItemsService {
   menuItems: any;
 
   constructor(private _httpApiService: HttpApiService) {
-    this._httpApiService.getProducts().then(data => {
+    this._httpApiService.getProductsFromServer().then(data => {
       this.menuItems = data['products'];
     })
-
+    console.log(this.menuItems);
   }
 
   getMenuItem(item: number): string {
