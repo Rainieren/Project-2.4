@@ -44,7 +44,7 @@ app.post('/api/auth', function(req, res) {
     if(!user || body.password != user.password) return res.sendStatus(401);
     
     let payload = { name: user.username, id: user.id };
-    let token = jwt.sign(payload, publicKey, signOptions);
+    let token = jwt.sign(payload, privateKey, signOptions);
     res.json({
       message: 'ok',
       token: token,

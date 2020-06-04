@@ -12,7 +12,7 @@ import { AuthService } from '../auth.service';
 export class LoginComponent {
   //public username: string;
   //default counter
-  public department: string = "counter";
+  public username: string = "counter";
   public password: string;
   public errorMsg: string;
 
@@ -21,20 +21,20 @@ export class LoginComponent {
   
   onSubmit() {
     //Call auth.login, act on result
-    this.auth.login(this.department, this.password)
+    this.auth.login(this.username, this.password)
     .subscribe(
       result => this.router.navigate(['dashboard']),
       err => this.errorMsg = 'Uw gebruikersnaam of wachtwoord is incorrect...'
     );
       
-    console.log(this.department);
+    console.log(this.username);
     console.log(this.password);
 
   }
 
   //change selected department 
   departmentChanged (event: any) {
-    this.department = event.target.value;
+    this.username = event.target.value;
   }
 
 }
