@@ -15,16 +15,14 @@ export class OrdersComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //console.log(this._ordersService.orders);
-    this.orders = this._ordersService.orders;
+
   }
 
   serveOrder(OrderId: number): void {
-    this._ordersService.serveOrder(OrderId);
+    console.log(this._ordersService.orders);
   }
 
   filterResults(arg): void {
-    console.log(arg);
     if(arg.filter == "Geen") {
       this.currentFilter = null; 
     }
@@ -36,8 +34,6 @@ export class OrdersComponent implements OnInit {
     if(arg.filter == "Keuken") {
       this.currentFilter = "kitchen"
     }
-
-    console.log(this.currentFilter)
   }
 
   getCurrentFilter(): string {

@@ -12,23 +12,21 @@ export class MenuItemsService {
     this._httpApiService.getProductsFromServer().then(data => {
       this.menuItems = data['products'];
     })
-    console.log(this.menuItems);
   }
 
   getMenuItem(item: number): string {
     for (let i = 0; i < this.menuItems.length; i++) {
       const element = this.menuItems[i];
-      if(element.itemId == item) {
+      if(element.item_id == item) {
         return element.name;
       }
     }
   }
 
   getFocus(item: number): string {
-    //console.log(item);
     for (let i = 0; i < this.menuItems.length; i++) {
       const element = this.menuItems[i];
-      if(element.itemId == item) {
+      if(element.item_id == item) {
         return element.focus;
       }
     }
@@ -38,7 +36,7 @@ export class MenuItemsService {
     for (let i = 0; i < this.menuItems.length; i++) {
       const element = this.menuItems[i];
       
-      if(element.itemId == item) {
+      if(element.item_id == item) {
         return element.price;
       }
     }

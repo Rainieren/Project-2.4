@@ -22,22 +22,22 @@ tables = [
 ]
 
 recipes = [
-    {'name': 'Pizza Hawai', 'price': 3.50, 'type': "pizza"},
-    {'name': 'Pizza Salami', 'price': 4.50, 'type': "pizza"},
-    {'name': 'Pizza Pepperoni', 'price': 5.50, 'type': "pizza"},
-    {'name': 'Pizza Tonijn', 'price': 5.00, 'type': "pizza"},
-    {'name': 'Pizza Shoarma', 'price': 4.00, 'type': "pizza"},
-    {'name': 'Pizza Kebab', 'price': 4.75, 'type': "pizza"},
-    {'name': 'Broodje Kip', 'price': 2.25, 'type': "brood"},
-    {'name': 'Broodje Warmvlees', 'price': 3.00, 'type': "brood"},
-    {'name': 'Broodje Gehaktbal', 'price': 2.50, 'type': "brood"},
-    {'name': 'Broodje Shoarma', 'price': 2.75, 'type': "brood"},
-    {'name': 'Broodje Kaas', 'price': 1.75, 'type': "brood"},
-    {'name': 'Broodje Vis', 'price': 3.00, 'type': "brood"},
-    {'name': 'Broodje Hotdog', 'price': 2.50, 'type': "brood"},
-    {'name': 'Broodje Jam', 'price': 1.50, 'type': "brood"},
-    {'name': 'Koffie', 'price': 1.50, 'type': "drinken"},
-    {'name': 'Thee', 'price': 1.50, 'type': "drinken"},
+    {'item_id': 0, 'name': 'Pizza Hawai', 'price': 3.50, 'type': "pizza", 'focus': 'kitchen'},
+    {'item_id': 1, 'name': 'Pizza Salami', 'price': 4.50, 'type': "pizza", 'focus': 'kitchen'},
+    {'item_id': 2, 'name': 'Pizza Pepperoni', 'price': 5.50, 'type': "pizza", 'focus': 'kitchen'},
+    {'item_id': 3, 'name': 'Pizza Tonijn', 'price': 5.00, 'type': "pizza", 'focus': 'kitchen'},
+    {'item_id': 4, 'name': 'Pizza Shoarma', 'price': 4.00, 'type': "pizza", 'focus': 'kitchen'},
+    {'item_id': 5, 'name': 'Pizza Kebab', 'price': 4.75, 'type': "pizza", 'focus': 'kitchen'},
+    {'item_id': 6, 'name': 'Broodje Kip', 'price': 2.25, 'type': "brood", 'focus': 'kitchen'},
+    {'item_id': 7, 'name': 'Broodje Warmvlees', 'price': 3.00, 'type': "brood", 'focus': 'kitchen'},
+    {'item_id': 8, 'name': 'Broodje Gehaktbal', 'price': 2.50, 'type': "brood", 'focus': 'kitchen'},
+    {'item_id': 9, 'name': 'Broodje Shoarma', 'price': 2.75, 'type': "brood", 'focus': 'kitchen'},
+    {'item_id': 10, 'name': 'Broodje Kaas', 'price': 1.75, 'type': "brood", 'focus': 'kitchen'},
+    {'item_id': 11, 'name': 'Broodje Vis', 'price': 3.00, 'type': "brood", 'focus': 'kitchen'},
+    {'item_id': 12, 'name': 'Broodje Hotdog', 'price': 2.50, 'type': "brood", 'focus': 'kitchen'},
+    {'item_id': 13, 'name': 'Broodje Jam', 'price': 1.50, 'type': "brood", 'focus': 'kitchen'},
+    {'item_id': 14, 'name': 'Koffie', 'price': 1.50, 'type': "drinken", 'focus': 'counter'},
+    {'item_id': 15, 'name': 'Thee', 'price': 1.50, 'type': "drinken", 'focus': 'counter'},
 ]
 
 quarks = [{'name': 'up', 'charge': '+2/3'},
@@ -46,6 +46,21 @@ quarks = [{'name': 'up', 'charge': '+2/3'},
           {'name': 'strange', 'charge': '-1/3'}]
 
 orders = []
+
+
+# add the order to the tables list
+def add_order(table_number, order):
+
+    for table in tables:
+        if int(table['tableNumber']) == table_number:
+            if len(table['orders']) == 0:
+                table['orders'].append(order)
+
+            else:
+                for new_order in order:
+                    for old_order in table['orders']:
+                        if new_order['itemId'] == old_order['item_id']:
+                            old_order['amount'] += new_order['amount']
 
 
 @app.route('/api/get_all_products', methods=['GET'])
@@ -58,6 +73,13 @@ def return_all():
 @app.route('/api/get_all_tables', methods=['GET'])
 def return_all_tables():
     response = jsonify({'tables': tables})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+
+@app.route('/api/get_current_orders', methods=['GET'])
+def get_current_orders():
+    response = jsonify({'orders': orders})
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
@@ -128,6 +150,11 @@ def add_new_order():
     data = request.get_json()
     print(data)
     orders.append(data)
+
+    add_order(data['order_id'], data['orders'])
+
+    print(orders)
+
     response = jsonify({'message': 'OK'})
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response

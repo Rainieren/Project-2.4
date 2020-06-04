@@ -24,6 +24,8 @@ export class AddOrderComponent implements OnInit {
   }
 
   newOrder(value) {
+    console.log(value)
+
     let items = [];
     let itemCounter = 0;
 
@@ -40,7 +42,7 @@ export class AddOrderComponent implements OnInit {
     }
     
     this._ordersService.createOrder({table: value.table, items: items});
-    this._tablesService.addOrder(value.table, items);
+    this._tablesService.addOrder();
 
     this.show = true;
     this.close();

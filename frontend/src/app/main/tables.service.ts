@@ -19,38 +19,14 @@ export class TablesService implements OnInit {
 
   }
 
-  addOrder(tableNumber: number, order: any[]): void {
-    const index = tableNumber - 1;
-    
-    if(this.tables[index].orders.length == 0) {
-      for(let i = 0; i < this.tables.length; i++) {
-        const element = this.tables[i];
-        if(tableNumber == element.tableNumber) {
-          for(let j = 0; j < order.length; j++) {
-            element.orders.push(order[j])
-          }
-        }
-      }
-    } else {
-      for(let i = 0; i < this.tables.length; i++) {
-        const element = this.tables[i];
-        
-        if(tableNumber == element.tableNumber) {
+  addOrder(): void {
+    setTimeout(() => this.fetchNewList(), 1000);
+  }
 
-          for(let j = 0; j < element.orders.length; j++) {
-            const tableOrders = element.orders[j];
-
-            for(let k = 0; k < order.length; k++) {
-              const currentOrder = order[k];
-
-              if(currentOrder.itemId == tableOrders.itemId) {
-                tableOrders.amount += currentOrder.amount;
-              }
-            }
-          } 
-        }
-      }
-    }
+  fetchNewList() {
+    this._httpApiService.getTablesFromServer().then(data => {
+      this.tables = data['tables'];
+    })
   }
 
   getListOfAllItemsOfTable(tableNumber: number): [] {

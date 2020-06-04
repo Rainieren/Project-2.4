@@ -35,5 +35,9 @@ export class HttpApiService {
     return await this.http.get(this.rootUrl + "/get_all_tables").toPromise();
   }
 
+  async getOrdersFromServer() {
+    return await this.http.get(this.rootUrl + "/get_current_orders").toPromise();
+  }
+
 
 }

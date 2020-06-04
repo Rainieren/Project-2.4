@@ -8,10 +8,10 @@
         </select>
         <button type="submit" id="filter-button" class="btn btn-primary">Toepassen</button>
     </form>
-    <ng-container *ngFor="let order of orders; let i = index">
+    <ng-container *ngFor="let order of this._ordersService.orders; let i = index">
         <div class="card">
             <div class="card-body">
-            <h5 class="card-title">Bestelling #{{ order.orderId }}</h5>
+            <h5 class="card-title">Bestelling #{{ order.order_id }}</h5>
             <h6 class="card-subtitle mb-2 text-muted">Tafel {{ order.table }}</h6>
             <ul class="list-group list-group-flush">
                 <ng-container *ngFor="let item of order.orders"> 
