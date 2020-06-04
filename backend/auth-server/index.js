@@ -11,9 +11,9 @@ const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt');
 
 var users = [
-    { 'id': 1, 'username': 'counter', 'password': 'counter', 'function': 'counter' },
-    { 'id': 2, 'username': 'keuken', 'password': 'keuken', 'function': 'keuken' },
-    { 'id': 3, 'username': 'serveerder', 'password': 'serveerder', 'function': 'serveerder' }
+    { 'id': 1, 'role': 'counter', 'password': 'counter'},
+    { 'id': 2, 'role': 'keuken', 'password': 'keuken'},
+    { 'id': 3, 'role': 'serveerder', 'password': 'serveerder'},
 ];
 
 const privateKey = fs.readFileSync('./private.pem', 'utf8');
@@ -40,10 +40,10 @@ app.get('/api', (req, res) => {
 app.post('/api/auth', function(req, res) {
     const body = req.body;
 
-    const user = users.find(user => user.username == body.username);
+    const user = users.find(user => user.role == body.role);
     if(!user || body.password != user.password) return res.sendStatus(401);
     
-    let payload = { name: user.username, id: user.id };
+    let payload = { id: user.id, role: user.role };
     let token = jwt.sign(payload, privateKey, signOptions);
     res.json({
       message: 'ok',

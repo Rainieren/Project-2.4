@@ -10,31 +10,45 @@ import { AuthService } from '../auth.service';
 
 //TODO: remove OnInit?
 export class LoginComponent {
-  //public username: string;
-  //default counter
-  public username: string = "counter";
+
+  public role: string = "counter";
   public password: string;
   public errorMsg: string;
 
   constructor(private auth: AuthService, private router: Router) {};
-
   
   onSubmit() {
     //Call auth.login, act on result
-    this.auth.login(this.username, this.password)
+    this.auth.login(this.role, this.password)
     .subscribe(
-      result => this.router.navigate(['dashboard']),
+      result => this.roleBasedRedirect(),
       err => this.errorMsg = 'Uw gebruikersnaam of wachtwoord is incorrect...'
     );
-      
-    console.log(this.username);
-    console.log(this.password);
-
   }
 
   //change selected department 
   departmentChanged (event: any) {
-    this.username = event.target.value;
+    this.role = event.target.value;
   }
 
+  //redirect the user to a page based on their role
+  roleBasedRedirect() {
+    let jwt = localStorage.getItem('access_token');
+    let jwtData = jwt.split('.')[1]
+    let decodedJwtJsonData = window.atob(jwtData)
+    let decodedJwtData = JSON.parse(decodedJwtJsonData)
+    
+    let role = decodedJwtData.name
+
+    if (role === "counter") {
+      this.router.navigate(['dashboard'])
+    }
+    else if (role === "keuken") {
+      this.router.navigate(['orders'])
+    }
+    else if (role === "serveerder") {
+      this.router.navigate(['add-order'])
+    }
+  }
+  
 }
