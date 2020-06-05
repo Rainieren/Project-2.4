@@ -1,6 +1,9 @@
 from flask import Flask
 from flask import jsonify
 from flask import request
+from flask import make_response
+import jwt
+import datetime
 
 app = Flask(__name__)
 
@@ -26,6 +29,11 @@ quarks = [{'name': 'up', 'charge': '+2/3'},
           {'name': 'charm', 'charge': '+2/3'},
           {'name': 'strange', 'charge': '-1/3'}]
 
+users = [
+    { 'id': 1, 'role': 'counter', 'password': 'counter'},
+    { 'id': 2, 'role': 'keuken', 'password': 'keuken'},
+    { 'id': 3, 'role': 'serveerder', 'password': 'serveerder'},
+]
 
 @app.route('/api/get_all_products', methods=['GET'])
 def return_all():
@@ -90,6 +98,31 @@ def get_recipes_by_name(name):
 def get_recipes():
     return jsonify({'recipes': recipes})
 
+# JWT 
+app.config['SECRET_KEY'] = 'thisistheverysecretkeythatnooneshouldeverfind' # nog te veranderen?
+
+@app.route('/api/auth', methods=['GET', 'POST']) 
+def auth():
+    # checking if request contains JSON
+    if not request.is_json:
+        return jsonify({"msg": "Missing JSON in request"}), 400
+
+    # setting role 
+    role = request.json.get('role', None)
+
+    # searching if user exists
+    for i, j in enumerate(users):
+        if(role == j['role']):
+            # when user existst, store user in 'user'
+            user = users[i]
+            # check if password is correct
+            if user['password'] == request.json.get('password', None):
+                # if so, generate and return token
+                token = jwt.encode({'id': user['id'],'role': role, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+                return jsonify({'token': token.decode('UTF-8')})
+
+    # else, return error
+    return make_response('Could not verify', 401)
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -27,9 +27,6 @@ export class LoginComponent implements OnInit {
       result => this.roleBasedRedirect(),
       err => this.errorMsg = 'Uw gebruikersnaam of wachtwoord is incorrect...'
     );
-
-    console.log(this.role);
-    console.log(this.password);
   }
 
   //change selected department 
