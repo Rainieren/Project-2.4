@@ -13,7 +13,7 @@ const expressJwt = require('express-jwt');
 var users = [
     { 'id': 1, 'role': 'counter', 'password': 'counter'},
     { 'id': 2, 'role': 'keuken', 'password': 'keuken'},
-    { 'id': 3, 'role': 'serveerder', 'password': 'serveerder'},
+    { 'id': 3, 'role': 'serveerder', 'password': 'serveerder'}
 ];
 
 const privateKey = fs.readFileSync('./private.pem', 'utf8');

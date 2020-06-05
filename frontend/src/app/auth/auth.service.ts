@@ -12,8 +12,8 @@ export class AuthService {
   
   //Method to login: POST's the provided name and password to the backend 
   //when a token is returned, it's set in the localStorage
-  login(username: string, password: string): Observable<boolean> {
-    return this.http.post<{token: string}>('/api/auth', {username, password})
+  login(role: string, password: string): Observable<boolean> {
+    return this.http.post<{token: string}>('/api/auth', {role, password})
       .pipe(
         map(result => {
           localStorage.setItem('access_token', result.token);

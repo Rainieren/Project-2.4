@@ -9,13 +9,16 @@ import { AuthService } from '../auth.service';
 })
 
 //TODO: remove OnInit?
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
   public role: string = "counter";
   public password: string;
   public errorMsg: string;
 
-  constructor(private auth: AuthService, private router: Router) {};
+  constructor(private auth: AuthService, private router: Router) {}ngOnInit(): void {
+    this.roleBasedRedirect();
+  }
+
   
   onSubmit() {
     //Call auth.login, act on result
@@ -24,6 +27,9 @@ export class LoginComponent {
       result => this.roleBasedRedirect(),
       err => this.errorMsg = 'Uw gebruikersnaam of wachtwoord is incorrect...'
     );
+
+    console.log(this.role);
+    console.log(this.password);
   }
 
   //change selected department 
@@ -33,21 +39,23 @@ export class LoginComponent {
 
   //redirect the user to a page based on their role
   roleBasedRedirect() {
-    let jwt = localStorage.getItem('access_token');
-    let jwtData = jwt.split('.')[1]
-    let decodedJwtJsonData = window.atob(jwtData)
-    let decodedJwtData = JSON.parse(decodedJwtJsonData)
-    
-    let role = decodedJwtData.name
+    if (localStorage.getItem('access_token')) {
+      let jwt = localStorage.getItem('access_token');
+      let jwtData = jwt.split('.')[1]
+      let decodedJwtJsonData = window.atob(jwtData)
+      let decodedJwtData = JSON.parse(decodedJwtJsonData)
+      
+      let role = decodedJwtData.role
 
-    if (role === "counter") {
-      this.router.navigate(['dashboard'])
-    }
-    else if (role === "keuken") {
-      this.router.navigate(['orders'])
-    }
-    else if (role === "serveerder") {
-      this.router.navigate(['add-order'])
+      if (role === "counter") {
+        this.router.navigate(['dashboard'])
+      }
+      else if (role === "keuken") {
+        this.router.navigate(['orders'])
+      }
+      else if (role === "serveerder") {
+        this.router.navigate(['add-order'])
+      }
     }
   }
   
