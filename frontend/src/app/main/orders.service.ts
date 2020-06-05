@@ -6,13 +6,13 @@ import { HttpApiService } from './http-api.service';
   providedIn: 'root'
 })
 export class OrdersService implements OnInit {
-  orders: Order[];
+  orders: [];
   orderCounter = 1;
 
   constructor(private _httpApiService: HttpApiService) { 
     this._httpApiService.getOrdersFromServer().then(data => {
       this.orders = data['orders'];
-    })
+    });
   }
 
   ngOnInit(): void {
@@ -20,9 +20,8 @@ export class OrdersService implements OnInit {
   }
 
   serveOrder(OrderId: number): void {
-
     for (var i = this.orders.length - 1; i >= 0; i--) {
-      if(this.orders[i].orderId == OrderId) {
+      if(this.orders[i]['order_id'] == OrderId) {
         this.orders.splice(i, 1);
       }
     }

@@ -3,10 +3,13 @@ from flask import jsonify
 from flask import request
 from flask_cors import CORS, cross_origin
 import sys
+import random
 
 app = Flask(__name__)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+
+order_id_counter = 0
 
 tables = [
     {'tableNumber': 1, 'orders': []},
@@ -63,6 +66,12 @@ def add_order(table_number, order):
                             old_order['amount'] += new_order['amount']
 
 
+def serve_order_from_list(order_id):
+    for order in orders:
+        if order['order_id'] == order_id:
+            orders.remove(order)
+
+
 @app.route('/api/get_all_products', methods=['GET'])
 def return_all():
     response = jsonify({'products': recipes})
@@ -72,6 +81,7 @@ def return_all():
 
 @app.route('/api/get_all_tables', methods=['GET'])
 def return_all_tables():
+    print(orders)
     response = jsonify({'tables': tables})
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
@@ -79,10 +89,22 @@ def return_all_tables():
 
 @app.route('/api/get_current_orders', methods=['GET'])
 def get_current_orders():
+    print(orders)
     response = jsonify({'orders': orders})
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
+
+@app.route('/api/serve_order', methods=['POST'])
+def serve_order():
+    data = request.get_json()
+
+    serve_order_from_list(data['order_id'])
+    print(orders)
+
+    response = jsonify({'message': 'OK'})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 '''
 @app.route('/api/get_one_product/<string:name>', methods=['GET'])
@@ -149,6 +171,10 @@ def get_recipes():
 def add_new_order():
     data = request.get_json()
     print(data)
+
+    # order_id = order_id_counter + 1
+    data['order_id'] = random.randint(1, 1000)
+
     orders.append(data)
 
     add_order(data['order_id'], data['orders'])
