@@ -1,13 +1,15 @@
-from flask import Flask, json
+from flask import Flask, render_template, request, json
 from flask import jsonify
-from flask import request
 from flask_cors import CORS, cross_origin
+from flask_mysqldb import MySQL
+
 import sys
 import random
 
 app = Flask(__name__)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+
 
 order_id_counter = 0
 
@@ -49,7 +51,6 @@ quarks = [{'name': 'up', 'charge': '+2/3'},
           {'name': 'strange', 'charge': '-1/3'}]
 
 orders = []
-
 
 # add the order to the tables list
 def add_order(table_number, order):
