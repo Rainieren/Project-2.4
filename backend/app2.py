@@ -12,43 +12,45 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 state = "startup";
 mysql = MySQL(app)
 
-@app.route('/')
-def index():
+@app.route('/database/startup')
+def startup():
     cur = mysql.connection.cursor()
-    if state == 'x':
-        cur.execute('''CREATE TABLE `recipes` (
-        `recipeID` int(11) unsigned NOT NULL AUTO_INCREMENT,
-        `recipeName` varchar(45) NOT NULL,
-        `recipePrice` varchar(45) NOT NULL,
-        PRIMARY KEY (`recipeID`),
-        UNIQUE KEY `recipeName_UNIQUE` (`recipeName`));
-        ''')
-        cur.execute('''ALTER TABLE `restaurantdb`.`recipes` 
-        ADD COLUMN `recipeType` VARCHAR(45) NULL AFTER `recipePrice`;''')
-        cur.execute('''CREATE TABLE `restaurantdb`.`tables` (
-        `tableID` int(11) unsigned NOT NULL AUTO_INCREMENT,
-        `tableStatus` varchar(45) NOT NULL,
-        PRIMARY KEY (`tableID`));''')
-        cur.execute('''CREATE TABLE `restaurantdb`.`orders` (
-        `orderID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-        `orderDate` DATE NOT NULL,
-        `tableID` INT UNSIGNED NOT NULL,
-        PRIMARY KEY (`orderID`),
-        FOREIGN KEY (`tableID`) references tables(`tableID`));''')
-        cur.execute('''CREATE TABLE `restaurantdb`.`orderdetails` (
-        `orderID` INT UNSIGNED NOT NULL,
-        `recipeID` INT UNSIGNED NOT NULL,
-        `quantity` DECIMAL(6,2) NOT NULL,
-        FOREIGN KEY (`orderID`) references orders(`orderID`),
-        FOREIGN KEY (`recipeID`) references recipes(`recipeID`));''')
-    if state == "startup":
-        cur.execute('''INSERT INTO tables(tableID, tableStatus) VALUES 
+    cur.execute('''CREATE TABLE `recipes` (
+            `recipeID` int(11) unsigned NOT NULL AUTO_INCREMENT,
+            `recipeName` varchar(45) NOT NULL,
+            `recipePrice` varchar(45) NOT NULL,
+            PRIMARY KEY (`recipeID`),
+            UNIQUE KEY `recipeName_UNIQUE` (`recipeName`));
+            ''')
+    cur.execute('''ALTER TABLE `restaurantdb`.`recipes` 
+            ADD COLUMN `recipeType` VARCHAR(45) NULL AFTER `recipePrice`;''')
+    cur.execute('''CREATE TABLE `restaurantdb`.`tables` (
+            `tableID` int(11) unsigned NOT NULL AUTO_INCREMENT,
+            `tableStatus` varchar(45) NOT NULL,
+            PRIMARY KEY (`tableID`));''')
+    cur.execute('''CREATE TABLE `restaurantdb`.`orders` (
+            `orderID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `orderDate` DATE NOT NULL,
+            `tableID` INT UNSIGNED NOT NULL,
+            PRIMARY KEY (`orderID`),
+            FOREIGN KEY (`tableID`) references tables(`tableID`));''')
+    cur.execute('''CREATE TABLE `restaurantdb`.`orderdetails` (
+            `orderID` INT UNSIGNED NOT NULL,
+            `recipeID` INT UNSIGNED NOT NULL,
+            `quantity` DECIMAL(6,2) NOT NULL,
+            FOREIGN KEY (`orderID`) references orders(`orderID`),
+            FOREIGN KEY (`recipeID`) references recipes(`recipeID`));''')
+
+@app.route('/database/insert')
+def initialize():
+    cur = mysql.connection.cursor()
+    cur.execute('''INSERT INTO tables(tableID, tableStatus) VALUES 
                 (1, "FREE"),
                 (2, "FREE"),
                 (3, "FREE"),
                 (4, "FREE"),
                 (5, "FREE")''')
-        cur.execute('''INSERT INTO recipes(recipeName, recipePrice, recipeType) VALUES 
+    cur.execute('''INSERT INTO recipes(recipeName, recipePrice, recipeType) VALUES 
                 ("Pizza Hawai", 3.50, "Pizza"),
                 ("Pizza Salami", 4.50, "Pizza"),
                 ("Pizza Pepperoni", 3.50, "Pizza"),
@@ -63,7 +65,7 @@ def index():
                 ("Broodje Jam", 3.50, "Broodje"),
                 ("Broodje Hotdog", 3.50, "Broodje")        
                 ''')
-        cur.execute('''INSERT INTO orders(orderDate, tableID) VALUES
+    cur.execute('''INSERT INTO orders(orderDate, tableID) VALUES
                 (curdate(),  (SELECT tableID from tables WHERE tableID = '1')),
                 (curdate(),  (SELECT tableID from tables WHERE tableID = '4')),
                 (curdate(),  (SELECT tableID from tables WHERE tableID = '2')),
@@ -73,17 +75,15 @@ def index():
                 (curdate(),  (SELECT tableID from tables WHERE tableID = '1')),
                 (curdate(),  (SELECT tableID from tables WHERE tableID = '2'))
                 ''')
-        mysql.connection.commit()
+    mysql.connection.commit()
 
-    #cur.execute('''INSERT INTO example VALUES (1, 'Anthony')''')
-    #cur.execute('''INSERT INTO example VALUES (2, 'Billy')''')
-    #mysql.connection.commit()
-
-    #cur.execute('''SELECT * FROM recipe''')
-    #results = cur.fetchall()
-    #print(results)
-    #return str(results)
-    return 'Done!'
+@app.route('/database/select')
+def select():
+    cur = mysql.connection.cursor()
+    cur.execute('''SELECT * FROM recipes''')
+    results = cur.fetchall()
+    print(results)
+    return str(results)
 
 if __name__ == "__main__":
     app.run(debug=True)
