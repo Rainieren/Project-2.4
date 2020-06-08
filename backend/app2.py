@@ -41,7 +41,7 @@ def startup():
             FOREIGN KEY (`orderID`) references orders(`orderID`),
             FOREIGN KEY (`recipeID`) references recipes(`recipeID`));''')
 
-@app.route('/database/insert')
+@app.route('/database/insert', methods=['PUT'])
 def initialize():
     cur = mysql.connection.cursor()
     cur.execute('''INSERT INTO tables(tableID, tableStatus) VALUES 
@@ -77,10 +77,20 @@ def initialize():
                 ''')
     mysql.connection.commit()
 
-@app.route('/database/select')
+@app.route('/database/select/<string:name>', methods=['GET'])
+def selectbyname(name):
+    cur = mysql.connection.cursor()
+    select_statement = "SELECT * FROM recipes WHERE recipeName LIKE %(emp_no)s"
+    cur.execute(select_statement, {'emp_no': "%"+name+"%"})
+    results = cur.fetchall()
+    print(results)
+    return str(results)
+
+@app.route('/database/select', methods=['GET'])
 def select():
     cur = mysql.connection.cursor()
-    cur.execute('''SELECT * FROM recipes''')
+    select_statement = "SELECT * FROM recipes"
+    cur.execute(select_statement)
     results = cur.fetchall()
     print(results)
     return str(results)
