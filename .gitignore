@@ -6,7 +6,7 @@ frontend/dist
 /out-tsc
 # Only exists if Bazel was run
 /bazel-out
-backend/__pycache__/*
+/backend/__pycache__
 
 # dependencies
 frontend/node_modules
