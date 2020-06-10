@@ -39,6 +39,7 @@ export class OrdersService implements OnInit {
     this._httpApiService.sendNewOrder(order);
   }
 
+  /*
   getTableHasOrder(tableNumber: number): boolean {
     for (var i = this.orders.length - 1; i >= 0; i--) {
       if(this.orders[i].table == tableNumber) {
@@ -56,4 +57,5 @@ export class OrdersService implements OnInit {
       }
     }
   }
+  */
 }

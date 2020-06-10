@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Table {
@@ -46,5 +46,14 @@ export class HttpApiService {
       console.log(data);
     });
   }
+
+  
+  async getTableInfo(tableNumber) {
+    return await this.http.post(this.rootUrl + "/get_table_info", { 
+      "table_number": tableNumber
+    }).toPromise();
+    
+  }
+  
 
 }
