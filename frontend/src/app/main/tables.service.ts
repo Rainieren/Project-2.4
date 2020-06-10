@@ -10,13 +10,17 @@ export class TablesService implements OnInit {
   rootUrl: string = "http://localhost:5000/api"
  
   constructor(private _httpApiService: HttpApiService, public _menuItemService: MenuItemsService) {
-    this._httpApiService.getTablesFromServer().then(data => {
-      this.tables = data['tables'];
-    })
+    this.refreshData();
   }
 
   ngOnInit(): void {
 
+  }
+
+  refreshData(): void {
+    this._httpApiService.getTablesFromServer().then(data => {
+      this.tables = data['tables'];
+    })
   }
 
   addOrder(): void {

@@ -10,8 +10,7 @@ app = Flask(__name__)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-
-order_id_counter = 0
+order_id_counter = 1
 
 tables = [
     {'tableNumber': 1, 'orders': []},
@@ -52,6 +51,35 @@ quarks = [{'name': 'up', 'charge': '+2/3'},
 
 orders = []
 
+
+def get_orders(table_number):
+    for table in tables:
+        if table['tableNumber'] == table_number:
+            return table['orders']
+
+    return []
+
+
+# get the total price of a table
+def get_total_price_of_table(table_number):
+    price = 0
+    for table in tables:
+        if table['tableNumber'] == table_number:
+            for orders in table['orders']:
+                for item in orders:
+                    if item['amount'] != 0:
+                        for amount in range(0, item['amount']):
+                            price += get_price(item['itemId'])
+
+    return price
+
+
+def get_price(item_id):
+    for item in recipes:
+        if item_id == item['item_id']:
+            return item['price']
+
+          
 # add the order to the tables list
 def add_order(table_number, order):
 
@@ -63,14 +91,48 @@ def add_order(table_number, order):
             else:
                 for new_order in order:
                     for old_order in table['orders']:
-                        if new_order['itemId'] == old_order['item_id']:
-                            old_order['amount'] += new_order['amount']
+                        for item in old_order:
+                            if item['itemId'] == new_order['itemId']:
+                                item['amount'] += new_order['amount']
+
+
+def get_table_has_order(table_number):
+    for order in orders:
+        if int(order['table']) == int(table_number):
+            return True
+
+    return False
 
 
 def serve_order_from_list(order_id):
     for order in orders:
         if order['order_id'] == order_id:
             orders.remove(order)
+
+
+def get_waiting_order(table_number):
+    for order in orders:
+        if order['table'] == table_number:
+            return order
+
+    return []
+
+
+@app.route('/api/get_table_info', methods=['POST'])
+def return_table_info():
+    data = request.get_json()
+
+    try:
+        table_number = data['table_number']
+        response = jsonify({'has_order': get_table_has_order(int(table_number)),
+                            'price': get_total_price_of_table(int(table_number)),
+                            'waiting_orders': get_waiting_order(int(table_number)),
+                            'all_orders': get_orders(int(table_number))
+                           })
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+    except NameError:
+        return jsonify({'message': 'ERROR'})
 
 
 @app.route('/api/get_all_products', methods=['GET'])
@@ -82,7 +144,6 @@ def return_all():
 
 @app.route('/api/get_all_tables', methods=['GET'])
 def return_all_tables():
-    print(orders)
     response = jsonify({'tables': tables})
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
@@ -90,7 +151,6 @@ def return_all_tables():
 
 @app.route('/api/get_current_orders', methods=['GET'])
 def get_current_orders():
-    print(orders)
     response = jsonify({'orders': orders})
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
@@ -98,14 +158,46 @@ def get_current_orders():
 
 @app.route('/api/serve_order', methods=['POST'])
 def serve_order():
+
     data = request.get_json()
 
     serve_order_from_list(data['order_id'])
-    print(orders)
+
+    response = jsonify({'message': 'OK'})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+
+    return response
+
+
+@app.route('/api/get_price_of_table', methods=['POST'])
+def get_price_of_table():
+    data = request.get_json()
+
+    response = jsonify({'price': get_total_price_of_table(data['table_number'])})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+
+    return response
+
+
+@app.route('/api/add_new_order', methods=['POST'])
+@cross_origin()
+def add_new_order():
+    global order_id_counter
+
+    data = request.get_json()
+
+    # order_id = order_id_counter + 1
+    data['order_id'] = order_id_counter
+    order_id_counter += 1
+
+    orders.append(data)
+
+    add_order(int(data['table']), data['orders'])
 
     response = jsonify({'message': 'OK'})
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
+
 
 '''
 @app.route('/api/get_one_product/<string:name>', methods=['GET'])
@@ -167,25 +259,6 @@ def get_recipes():
     return jsonify({'recipes': recipes})
 
 '''
-@app.route('/api/add_new_order', methods=['POST'])
-@cross_origin()
-def add_new_order():
-    data = request.get_json()
-    print(data)
-
-    # order_id = order_id_counter + 1
-    data['order_id'] = random.randint(1, 1000)
-
-    orders.append(data)
-
-    add_order(data['order_id'], data['orders'])
-
-    print(orders)
-
-    response = jsonify({'message': 'OK'})
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
-
 
 if __name__ == "__main__":
     app.run(debug=True)
