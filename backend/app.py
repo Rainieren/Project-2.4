@@ -268,6 +268,7 @@ def get_recipes():
 # JWT 
 app.config['SECRET_KEY'] = 'thisistheverysecretkeythatnooneshouldeverfind' # nog te veranderen?
 
+
 @app.route('/api/auth', methods=['GET', 'POST']) 
 def auth():
     # checking if request contains JSON
