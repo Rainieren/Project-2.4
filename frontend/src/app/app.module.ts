@@ -8,6 +8,7 @@ import { HeaderComponent } from './header/header.component';
 import { TablesComponent } from './main/tables/tables.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TableCardComponent } from './main/table-card/table-card.component';
+import { HttpClientModule } from '@angular/common/http';
 
 import { JwtModule } from '@auth0/angular-jwt';
 import { HttpClientModule } from '@angular/common/http';
@@ -41,6 +42,7 @@ export function tokenGetter() {
         blacklistedRoutes: ['localhost:4000/api/auth']
       }
     }),
+    HttpClientModule, 
   ],
   providers: [
     AuthService,

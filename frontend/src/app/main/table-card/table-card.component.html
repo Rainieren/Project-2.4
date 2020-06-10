@@ -1,15 +1,15 @@
 <div class="container">
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Tafel {{ tableNumber }} <span *ngIf="hasWaitingOrder" class="badge badge-info">Wachtende bestelling</span></h5>
-            <p class="card-text">&euro; {{ _tableService.getTotalPriceOfTable(tableNumber) }}</p>
+            <h5 class="card-title" (click)="checkValues()">Tafel {{ tableNumber }} <span *ngIf="this.tableInfo['has_order']" class="badge badge-info">Wachtende bestelling</span></h5>
+            <p class="card-text">&euro; {{ this.tableInfo['price'] }}</p>
             <p id="card">
                 <button type="button" class="btn btn-outline-primary" (click)="isCollapsed = !isCollapsed"
                         [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
                     Bestellingen
                 </button>
             </p>
-            <ng-container *ngIf="hasWaitingOrder">
+            <ng-container *ngIf="this.tableInfo['has_order']">
                 <p id="card">
                     <button type="button" class="btn btn-outline-primary" (click)="waitingOrderIsCollapsed = !waitingOrderIsCollapsed"
                             [attr.aria-expanded]="!waitingOrderIsCollapsed" aria-controls="waitingOrderCollapse">
@@ -20,26 +20,26 @@
             <div id="collapseExample" [ngbCollapse]="isCollapsed">
                 <div class="card">
                     <div class="card-body">
-                        <p *ngIf="orders.length == 0">Nog geen bestellingen</p>
+                        <p *ngIf="this.tableInfo['all_orders'][0].length == 0">Nog geen bestellingen</p>
                         <ul class="list-group list-group-flush">
-                            <ng-container *ngFor="let order of orders">
+                            <ng-container *ngFor="let order of this.tableInfo['all_orders'][0]">
                                 <li class="list-group-item" *ngIf="order.amount != 0">{{ _menuItemService.getMenuItem(order.itemId) }}<span class="badge badge-secondary badge-pill" style="float: right;">{{ order.amount }}</span></li>
                             </ng-container>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div id="waitingOrderCollapse" [ngbCollapse]="waitingOrderIsCollapsed">
+            <!--<div id="waitingOrderCollapse" [ngbCollapse]="waitingOrderIsCollapsed">
                 <div class="card">
                     <div class="card-body">
                         <ul class="list-group list-group-flush">
-                            <ng-container *ngFor="let order of waitingOrders">
+                            <ng-container *ngFor="let order of this.tableInfo['waiting_orders']">
                                 <li class="list-group-item" *ngIf="order.amount != 0">{{ _menuItemService.getMenuItem(order.itemId) }}<span class="badge badge-secondary badge-pill" style="float: right;">{{ order.amount }}</span></li>
                             </ng-container>
                         </ul>
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
     </div>
 </div>

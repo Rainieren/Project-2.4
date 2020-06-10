@@ -1,25 +1,27 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Order } from 'src/app/main/order';
-import { Observable, of } from 'rxjs';
+import { HttpApiService } from './http-api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrdersService implements OnInit {
-  orders: Order[];
+  orders: [];
   orderCounter = 1;
 
-  constructor() { 
-    this.orders = [];
+  constructor(private _httpApiService: HttpApiService) { 
+    this._httpApiService.getOrdersFromServer().then(data => {
+      this.orders = data['orders'];
+    });
   }
 
   ngOnInit(): void {
+
   }
 
   serveOrder(OrderId: number): void {
-
     for (var i = this.orders.length - 1; i >= 0; i--) {
-      if(this.orders[i].orderId == OrderId) {
+      if(this.orders[i]['order_id'] == OrderId) {
         this.orders.splice(i, 1);
       }
     }
@@ -30,13 +32,14 @@ export class OrdersService implements OnInit {
   }
 
   createOrder(newOrder) {
-    let order = this.orderCounter;
+    let orderNumber = this.orderCounter;
+    let order = {orderId: orderNumber, table: newOrder.table, orders: newOrder.items};
 
-    this.orders.push({orderId: order, table: newOrder.table, orders: newOrder.items});
     this.orderCounter++;
-    console.log(this.orders);
+    this._httpApiService.sendNewOrder(order);
   }
 
+  /*
   getTableHasOrder(tableNumber: number): boolean {
     for (var i = this.orders.length - 1; i >= 0; i--) {
       if(this.orders[i].table == tableNumber) {
@@ -54,4 +57,5 @@ export class OrdersService implements OnInit {
       }
     }
   }
+  */
 }

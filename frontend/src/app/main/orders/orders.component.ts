@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OrdersService } from '../orders.service';
 import { MenuItemsService } from '../menu-items.service';
+import { HttpApiService } from '../http-api.service';
 
 @Component({
   selector: 'app-orders',
@@ -11,20 +12,19 @@ export class OrdersComponent implements OnInit {
   public orders;
   currentFilter = null;
 
-  constructor(public _ordersService: OrdersService, public _menuItemsService: MenuItemsService) { 
+  constructor(public _ordersService: OrdersService, public _menuItemsService: MenuItemsService, private _httpApiService: HttpApiService) { 
   }
 
   ngOnInit(): void {
-    //console.log(this._ordersService.orders);
-    this.orders = this._ordersService.orders;
+
   }
 
   serveOrder(OrderId: number): void {
+    this._httpApiService.serveOrder(OrderId);
     this._ordersService.serveOrder(OrderId);
   }
 
   filterResults(arg): void {
-    console.log(arg);
     if(arg.filter == "Geen") {
       this.currentFilter = null; 
     }
@@ -36,8 +36,6 @@ export class OrdersComponent implements OnInit {
     if(arg.filter == "Keuken") {
       this.currentFilter = "kitchen"
     }
-
-    console.log(this.currentFilter)
   }
 
   getCurrentFilter(): string {
