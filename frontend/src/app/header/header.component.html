@@ -2,16 +2,21 @@
     <a class="navbar-brand">RestaurantApp</a>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-            <a class="nav-item nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-            <a class="nav-item nav-link" routerLink="/overview-tables" routerLinkActive="active">Tafels</a>
-            <a class="nav-item nav-link" routerLink="/orders" routerLinkActive="active">Bestellingen</a>
-            <a style="width: 150px;" class="nav-item nav-link" routerLink="/add-order" routerLinkActive="active">Nieuwe bestelling</a>
+            <a class="nav-item nav-link" routerLink="/dashboard" 
+            routerLinkActive="active" *ngIf="auth.loggedIn">Dashboard</a>
+            <a class="nav-item nav-link" routerLink="/overview-tables" 
+            routerLinkActive="active" *ngIf="auth.loggedIn">Tafels</a>
+            <a class="nav-item nav-link" routerLink="/orders" 
+            routerLinkActive="active" *ngIf="auth.loggedIn">Bestellingen</a>
+            <a style="width: 150px;" class="nav-item nav-link" routerLink="/add-order" 
+            routerLinkActive="active" *ngIf="auth.loggedIn">Nieuwe bestelling</a>
         </div>
     </div>
     <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link nav-item active" href="#">Uitloggen</a>
+                <a (click)="logout()" class="nav-link nav-item active" 
+                href="#" *ngIf="auth.loggedIn">Uitloggen</a>
             </li>
         </ul>
     </div>
