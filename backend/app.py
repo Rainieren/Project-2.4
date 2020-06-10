@@ -1,7 +1,8 @@
-from flask import Flask, json
+from flask import Flask, render_template, request, json
 from flask import jsonify
-from flask import request
 from flask_cors import CORS, cross_origin
+from flask_mysqldb import MySQL
+
 import sys
 import random
 
@@ -78,7 +79,7 @@ def get_price(item_id):
         if item_id == item['item_id']:
             return item['price']
 
-
+          
 # add the order to the tables list
 def add_order(table_number, order):
 
