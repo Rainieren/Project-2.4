@@ -1,10 +1,6 @@
-from flask import Flask, render_template, request, json
+from flask import Flask, request
 from flask import jsonify
 from flask_cors import CORS, cross_origin
-from flask_mysqldb import MySQL
-
-import sys
-import random
 
 app = Flask(__name__)
 CORS(app)
