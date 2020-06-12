@@ -6,7 +6,7 @@ frontend/dist
 /out-tsc
 # Only exists if Bazel was run
 /bazel-out
-backend/__pycache__/*
+/backend/__pycache__
 
 # dependencies
 frontend/node_modules
@@ -18,15 +18,18 @@ chrome-profiler-events*.json
 speed-measure-plugin*.json
 
 # IDEs and editors
-/.idea
+.idea
 .project
 .classpath
 .c9/
+
 *.launch
 .settings/
 *.sublime-workspace
 /backend/venv
-
+/backend/.idea
+/backend/__pycache__
+/backend/myenv
 
 # IDE - VSCode
 .vscode/*
