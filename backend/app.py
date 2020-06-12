@@ -112,8 +112,8 @@ def serve_order_from_list(order_id):
 
 def get_waiting_order(table_number):
     for order in orders:
-        if order['table'] == table_number:
-            return order
+        if int(order['table']) == table_number:
+            return order['orders']
 
     return []
 

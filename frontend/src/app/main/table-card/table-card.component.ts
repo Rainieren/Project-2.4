@@ -46,6 +46,6 @@ export class TableCardComponent implements OnInit {
   }
 
   checkValues() {
-    console.log(this.tableInfo['all_orders'][0].length);
+    console.log(this.tableInfo);
   }
 }
