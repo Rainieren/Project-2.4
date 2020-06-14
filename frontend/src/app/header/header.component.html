@@ -16,7 +16,7 @@
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <a (click)="logout()" class="nav-link nav-item active"
-                href="#" *ngIf="auth.loggedIn">Uitloggen</a>
+                href="#" *ngIf="auth.loggedIn"><span class="mr-3"><fa-icon [icon]="faSignOutAlt"></fa-icon></span>Uitloggen</a>
             </li>
         </ul>
     </div>

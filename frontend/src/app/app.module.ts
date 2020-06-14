@@ -14,6 +14,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { LoginComponent } from './auth/login/login.component';
 import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/auth.guard';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -30,6 +31,7 @@ export function tokenGetter() {
   ],
   imports: [
     BrowserModule,
+    FontAwesomeModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
@@ -41,7 +43,8 @@ export function tokenGetter() {
         blacklistedRoutes: ['localhost:4000/api/auth']
       }
     }),
-    HttpClientModule, 
+    HttpClientModule,
+    FontAwesomeModule,
   ],
   providers: [
     AuthService,

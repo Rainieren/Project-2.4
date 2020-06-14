@@ -1,9 +1,13 @@
-div {
-    margin-top: 1rem;
+/*div {*/
+/*    margin-top: 1rem;*/
+/*}*/
+.card {
+  border-radius: 8px;
+
 }
 
 #card {
-    width: auto; 
+    width: auto;
     margin: 0.5rem;
 }
 

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-header',
@@ -8,13 +9,14 @@ import { AuthService } from '../auth/auth.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
+  faSignOutAlt = faSignOutAlt;
 
   //Set authService to check if user is logged in, in order to show the logout button
   auth: AuthService;
 
   constructor(private _auth: AuthService, private router: Router) {
     this.auth = _auth;
-    
+
   }
 
   //Method to logout user
