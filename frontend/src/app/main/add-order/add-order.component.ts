@@ -35,7 +35,7 @@ export class AddOrderComponent implements OnInit {
         itemCounter++;
       } 
 
-      if(value[key] == "" && key != "table") {
+      if(value[key] == "" && key != "table" && value[key] == 0) {
         items.push({itemId: itemCounter, amount: 0});
         itemCounter++;
       }
