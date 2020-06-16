@@ -13,10 +13,15 @@ export class OrdersComponent implements OnInit {
   currentFilter = null;
 
   constructor(public _ordersService: OrdersService, public _menuItemsService: MenuItemsService, private _httpApiService: HttpApiService) { 
+    this.fetchData();
   }
 
   ngOnInit(): void {
 
+  }
+
+  fetchData() {
+    this._ordersService.fetchData();
   }
 
   serveOrder(OrderId: number): void {

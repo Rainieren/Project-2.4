@@ -1,6 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Order } from 'src/app/main/order';
 import { HttpApiService } from './http-api.service';
+import { interval } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +14,19 @@ export class OrdersService implements OnInit {
     this._httpApiService.getOrdersFromServer().then(data => {
       this.orders = data['orders'];
     });
+
   }
 
   ngOnInit(): void {
 
+  }
+
+  fetchData() {
+    interval(2000).subscribe(data => {
+      this._httpApiService.getOrdersFromServer().then(data => {
+        this.orders = data['orders'];
+      });
+    });
   }
 
   serveOrder(OrderId: number): void {
@@ -38,24 +48,4 @@ export class OrdersService implements OnInit {
     this.orderCounter++;
     this._httpApiService.sendNewOrder(order);
   }
-
-  /*
-  getTableHasOrder(tableNumber: number): boolean {
-    for (var i = this.orders.length - 1; i >= 0; i--) {
-      if(this.orders[i].table == tableNumber) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  getOrder(tableNumber: number) {
-    for (var i = this.orders.length - 1; i >= 0; i--) {
-      if(this.orders[i].table == tableNumber) {
-        return this.orders[i].orders;
-      }
-    }
-  }
-  */
 }
