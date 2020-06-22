@@ -1,7 +1,9 @@
+from backend.database import *
 from flask import Flask, request, Response
 from flask_mysqldb import MySQL
 
 app = Flask(__name__)
+
 
 app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'root'
@@ -11,6 +13,8 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 state = "startup";
 mysql = MySQL(app)
+
+database = Database(app, mysql)
 
 @app.route('/database/startup')
 def startup():
@@ -77,85 +81,57 @@ def initialize():
                 ''')
     mysql.connection.commit()
 
+
 #Returns information about all recipes matching partially with the given name.
 @app.route('/database/recipes_results/<string:name>', methods=['GET'])
 def recipes_results(name):
-    cur = mysql.connection.cursor()
-    select_statement = "SELECT * FROM recipes WHERE recipeName LIKE %(emp_no)s"
-    cur.execute(select_statement, {'emp_no': "%"+name+"%"})
-    results = cur.fetchall()
-    print(results)
+    results = database.getRecipesByName(name)
     return str(results)
+
 
 #Returns information of all recipes.
 @app.route('/database/recipes', methods=['GET'])
 def recipes():
-    cur = mysql.connection.cursor()
-    select_statement = "SELECT * FROM recipes"
-    cur.execute(select_statement)
-    results = cur.fetchall()
-    print(results)
+    results = database.getRecipes()
     return str(results)
 
+
 #Returns a more in dept information about an order such as ID, DATE, TableID and corresponding recipes with RecipeID and quanitity.
-#If order has no recipes returns nothing.
+#If order has no recipes added returns nothing.
 @app.route('/database/order_overview/<string:ID>', methods=['GET'])
 def order_overview(ID):
-    cur = mysql.connection.cursor()
-    select_statement = '''SELECT orders.orderID, orderDate, tableID, orderdetails.quantity, orderdetails.recipeID
-    FROM orders
-    INNER JOIN orderdetails 
-    ON orderdetails.orderID = orders.orderID
-    WHERE orders.orderID = %(emp_orderID)s'''
-    cur.execute(select_statement, {'emp_orderID': ID})
-    results = cur.fetchall()
-    print(results)
+    results = database.getOrderOverviewByID(ID)
     return str(results)
+
 
 #Returns all orders with more in dept information such as ID, DATE, TableID and corresponding recipes with RecipeID and quanitity.
 #If order has no recipes doesn't show up in list.
 @app.route('/database/orders_overview', methods=['GET'])
 def orders_overview():
-    cur = mysql.connection.cursor()
-    select_statement = '''SELECT orders.orderID, orderDate, tableID, orderdetails.quantity, orderdetails.recipeID
-    FROM orders
-    INNER JOIN orderdetails 
-    ON orderdetails.orderID = orders.orderID'''
-    cur.execute(select_statement)
-    results = cur.fetchall()
-    print(results)
+    results = database.getOrdersOverview()
     return str(results)
+
 
 #Returns all orders with basic information such as ID, DATE and TableID
 @app.route('/database/orders', methods=['GET'])
 def orders():
-    cur = mysql.connection.cursor()
-    select_statement = '''SELECT * FROM orders'''
-    cur.execute(select_statement)
-    results = cur.fetchall()
-    print(results)
+    results = database.getOrders()
     return str(results)
+
 
 #make a new order by using link/neworder?table=number
 @app.route('/database/new_order', methods=['GET'])
 def new_order():
     table = request.args.get('table')
-    cur = mysql.connection.cursor()
-    select_statement = '''INSERT INTO orders(orderDate, tableID) VALUES (curdate(),  %(emp_no)s)'''
-    cur.execute(select_statement, {'emp_no': table})
-    mysql.connection.commit()
-    print(select_statement)
-    return str(table)
+    database.insertOrder(table)
+    return str("Order has been made!")
+
 
 #http://127.0.0.1:5000/database/order/NUMBER
 #Returns basic order information such as ID, DATE and TableID
 @app.route('/database/order/<string:ID>', methods=['GET'])
 def order(ID):
-    cur = mysql.connection.cursor()
-    select_statement = "SELECT * FROM orders WHERE orderID LIKE %(emp_no)s"
-    cur.execute(select_statement, {'emp_no': ID})
-    results = cur.fetchall()
-    print(results)
+    results = database.getOrderByID(ID)
     return str(results)
 
 #http://127.0.0.1:5000/database/new_recipe?name=NAAM&price=GETAL&type=SOORT
@@ -164,12 +140,7 @@ def new_recipe():
     name = request.args.get('name')
     price = request.args.get('price')
     type = request.args.get('type')
-    print(name, price, type)
-    cur = mysql.connection.cursor()
-    select_statement = '''INSERT INTO recipes(recipeName, recipePrice, recipeType) VALUES (%(emp_name)s, %(emp_price)s, %(emp_type)s)'''
-    cur.execute(select_statement, {'emp_name': name, 'emp_price': price, 'emp_type': type})
-    mysql.connection.commit()
-    print(select_statement)
+    database.insertRecipe(name, price, type)
     return recipes_results(name)
 
 #http://127.0.0.1:5000/database/add_to_order?recipeid=NUMBER&orderid=NUMBER&quantity=NUMBER
@@ -178,12 +149,7 @@ def add_to_order():
     recipeID = request.args.get('recipeid')
     orderID = request.args.get('orderid')
     quantity = request.args.get('quantity')
-    print(recipeID, orderID, quantity)
-    cur = mysql.connection.cursor()
-    select_statement = '''INSERT INTO orderdetails(orderID, quantity, recipeID) VALUES (%(emp_orderid)s, %(emp_quantity)s, %(emp_recipeid)s)'''
-    cur.execute(select_statement, {'emp_orderid': orderID, 'emp_quantity': quantity, 'emp_recipeid': recipeID})
-    mysql.connection.commit()
-    print(select_statement)
+    database.addToOrder(recipeID, orderID, quantity)
     return order_overview(orderID)
 
 #http://127.0.0.1:5000/database/change_table_status?status=STATUS&tableid=NUMBER
@@ -191,22 +157,13 @@ def add_to_order():
 def change_table_status():
     tableID = request.args.get('tableid')
     status = request.args.get('status')
-    print(status)
-    cur = mysql.connection.cursor()
-    select_statement = '''UPDATE tables SET tableStatus = %(emp_status)s WHERE tableID = %(emp_tableid)s;'''
-    cur.execute(select_statement, {'emp_status': status, 'emp_tableid': tableID})
-    mysql.connection.commit()
-    print(select_statement)
+    database.setTableStatus(tableID, status)
     return tables()
 
 @app.route('/database/tables')
 def tables():
-    cur = mysql.connection.cursor()
-    select_statement = '''SELECT * FROM tables'''
-    cur.execute(select_statement)
-    results = cur.fetchall()
-    print(results)
-    return str(results)
+    return str(database.getTables())
+
 
 
 '''SELECT * FROM orders o JOIN orderdetails details ON o.orderID = details.orderID
