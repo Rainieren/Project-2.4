@@ -135,7 +135,7 @@ def order(ID):
     return str(results)
 
 #http://127.0.0.1:5000/database/new_recipe?name=NAAM&price=GETAL&type=SOORT
-@app.route('/database/new_recipe')
+@app.route('/database/new_recipe', methods=['POST', 'GET'])
 def new_recipe():
     name = request.args.get('name')
     price = request.args.get('price')
@@ -144,7 +144,7 @@ def new_recipe():
     return recipes_results(name)
 
 #http://127.0.0.1:5000/database/add_to_order?recipeid=NUMBER&orderid=NUMBER&quantity=NUMBER
-@app.route('/database/add_to_order')
+@app.route('/database/add_to_order', methods=['POST', 'GET'])
 def add_to_order():
     recipeID = request.args.get('recipeid')
     orderID = request.args.get('orderid')
@@ -153,14 +153,14 @@ def add_to_order():
     return order_overview(orderID)
 
 #http://127.0.0.1:5000/database/change_table_status?status=STATUS&tableid=NUMBER
-@app.route('/database/change_table_status')
+@app.route('/database/change_table_status', methods=['POST', 'GET', 'PUT'])
 def change_table_status():
     tableID = request.args.get('tableid')
     status = request.args.get('status')
     database.setTableStatus(tableID, status)
     return tables()
 
-@app.route('/database/tables')
+@app.route('/database/tables', methods=['GET'])
 def tables():
     return str(database.getTables())
 

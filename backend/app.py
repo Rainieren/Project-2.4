@@ -44,11 +44,6 @@ recipes = [
     {'item_id': 15, 'name': 'Thee', 'price': 1.50, 'type': "drinken", 'focus': 'counter'},
 ]
 
-quarks = [{'name': 'up', 'charge': '+2/3'},
-          {'name': 'down', 'charge': '-1/3'},
-          {'name': 'charm', 'charge': '+2/3'},
-          {'name': 'strange', 'charge': '-1/3'}]
-
 users = [
     { 'id': 1, 'role': 'counter', 'password': 'counter'},
     { 'id': 2, 'role': 'keuken', 'password': 'keuken'},
@@ -295,4 +290,3 @@ def auth():
 
 if __name__ == "__main__":
     app.run(debug=True)
-    str = "Messi is the best soccer player"
