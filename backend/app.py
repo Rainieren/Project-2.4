@@ -50,9 +50,9 @@ quarks = [{'name': 'up', 'charge': '+2/3'},
           {'name': 'strange', 'charge': '-1/3'}]
 
 users = [
-    { 'id': 1, 'role': 'counter', 'password': 'counter'},
-    { 'id': 2, 'role': 'keuken', 'password': 'keuken'},
-    { 'id': 3, 'role': 'serveerder', 'password': 'serveerder'},
+    {'id': 1, 'role': 'counter', 'password': 'counter'},
+    {'id': 2, 'role': 'keuken', 'password': 'keuken'},
+    {'id': 3, 'role': 'serveerder', 'password': 'serveerder'},
 ]
 
 orders = []
@@ -85,10 +85,9 @@ def get_price(item_id):
         if item_id == item['item_id']:
             return item['price']
 
-          
+
 # add the order to the tables list
 def add_order(table_number, order):
-
     for table in tables:
         if int(table['tableNumber']) == table_number:
             if len(table['orders']) == 0:
@@ -127,6 +126,7 @@ def get_waiting_order(table_number):
 @app.route('/api/get_table_info', methods=['POST'])
 def return_table_info():
     data = request.get_json()
+    print(data)
 
     try:
         table_number = data['table_number']
@@ -134,7 +134,7 @@ def return_table_info():
                             'price': get_total_price_of_table(int(table_number)),
                             'waiting_orders': get_waiting_order(int(table_number)),
                             'all_orders': get_orders(int(table_number))
-                           })
+                            })
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
     except NameError:
@@ -164,7 +164,6 @@ def get_current_orders():
 
 @app.route('/api/serve_order', methods=['POST'])
 def serve_order():
-
     data = request.get_json()
 
     serve_order_from_list(data['order_id'])
@@ -199,6 +198,7 @@ def add_new_order():
     orders.append(data)
 
     add_order(int(data['table']), data['orders'])
+    print(data['table'])
 
     response = jsonify({'message': 'OK'})
     response.headers.add('Access-Control-Allow-Origin', '*')
@@ -213,15 +213,11 @@ def return_one(name):
         if q['name'] == name:
             the_one = quarks[i]
     return jsonify({'quarks': the_one})
-
-
 @app.route('/api/add_product', methods=['POST'])
 def add_one():
     new_quark = request.get_json()
     quarks.append(new_quark)
     return jsonify({'quarks': quarks})
-
-
 @app.route('/api/edit_product/<string:name>', methods=['PUT'])
 def edit_one(name):
     new_quark = request.get_json()
@@ -230,69 +226,61 @@ def edit_one(name):
             quarks[i] = new_quark
     qs = request.get_json()
     return jsonify({'quarks': quarks})
-
-
 @app.route('/api/delete_product/<string:name>', methods=['DELETE'])
 def delete_one(name):
     for i, q in enumerate(quarks):
         if q['name'] == name:
             del quarks[i]
     return jsonify({'quarks': quarks})
-
-
 @app.route('/api/get_products_by_type/<string:type>', methods=['GET'])
 def get_recipes_by_type(type):
     recipe_list = []
     for i, q in enumerate(recipes):
         if q['type'] == type:
             recipe_list.append(q)
-
     return jsonify({'recipes': recipe_list})
-
-
 @app.route('/api/get_product_by_name/<string:name>', methods=['GET'])
 def get_recipes_by_name(name):
     recipe_list = []
     for i, q in enumerate(recipes):
         if name.find(q['name']) > -1:
             recipe_list.append(q)
-
     return jsonify({'recipes': recipe_list})
-
-
 @app.route('/api/recipes', methods=['GET'])
 def get_recipes():
     return jsonify({'recipes': recipes})
 '''
 
-# JWT 
-app.config['SECRET_KEY'] = 'thisistheverysecretkeythatnooneshouldeverfind' # nog te veranderen?
+# JWT
+app.config['SECRET_KEY'] = 'thisistheverysecretkeythatnooneshouldeverfind'  # nog te veranderen?
 
 
-@app.route('/api/auth', methods=['GET', 'POST']) 
+@app.route('/api/auth', methods=['GET', 'POST'])
 def auth():
     # checking if request contains JSON
     if not request.is_json:
         return jsonify({"msg": "Missing JSON in request"}), 400
 
-    # setting role 
+    # setting role
     role = request.json.get('role', None)
 
     # searching if user exists
     for i, j in enumerate(users):
-        if(role == j['role']):
+        if (role == j['role']):
             # when user existst, store user in 'user'
             user = users[i]
             # check if password is correct
             if user['password'] == request.json.get('password', None):
                 # if so, generate and return token
-                token = jwt.encode({'id': user['id'],'role': role, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+                token = jwt.encode({'id': user['id'], 'role': role,
+                                    'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)},
+                                   app.config['SECRET_KEY'])
                 return jsonify({'token': token.decode('UTF-8')})
 
     # else, return error
     return make_response('Could not verify', 401)
-    
+
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
     str = "Messi is the best soccer player"

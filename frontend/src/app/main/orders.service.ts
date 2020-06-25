@@ -15,6 +15,8 @@ export class OrdersService implements OnInit {
       this.orders = data['orders'];
     });
 
+    this.fetchData();
+
   }
 
   ngOnInit(): void {
@@ -22,7 +24,8 @@ export class OrdersService implements OnInit {
   }
 
   fetchData() {
-    interval(2000).subscribe(data => {
+    interval(10000).subscribe(data => {
+      console.log("test");
       this._httpApiService.getOrdersFromServer().then(data => {
         this.orders = data['orders'];
       });

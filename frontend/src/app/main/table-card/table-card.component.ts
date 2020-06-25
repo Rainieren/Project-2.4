@@ -45,7 +45,7 @@ export class TableCardComponent implements OnInit {
   }
 
   fetchData() {
-    interval(2000).subscribe(data => {
+    interval(3000).subscribe(data => {
       this._httpApiService.getTableInfo(this.tableNumber).then(data => {
         this.tableInfo = data;
       });
