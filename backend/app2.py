@@ -1,5 +1,5 @@
 from backend.database import *
-from flask import Flask, request, Response
+from flask import Flask, request, Response, jsonify
 from flask_mysqldb import MySQL
 
 app = Flask(__name__)
@@ -26,6 +26,7 @@ def startup():
             PRIMARY KEY (`recipeID`),
             UNIQUE KEY `recipeName_UNIQUE` (`recipeName`));
             ''')
+    cur.execute('''ALTER TABLE `restaurantdb`.`recipes` ADD COLUMN `recipeFocus` VARCHAR(45) NULL AFTER `recipeType`;''')
     cur.execute('''ALTER TABLE `restaurantdb`.`recipes` 
             ADD COLUMN `recipeType` VARCHAR(45) NULL AFTER `recipePrice`;''')
     cur.execute('''CREATE TABLE `restaurantdb`.`tables` (
@@ -38,10 +39,12 @@ def startup():
             `tableID` INT UNSIGNED NOT NULL,
             PRIMARY KEY (`orderID`),
             FOREIGN KEY (`tableID`) references tables(`tableID`));''')
+    cur.execute('''ALTER TABLE `restaurantdb`.`orders` 
+            ADD COLUMN `orderStatus` VARCHAR(45) NOT NULL AFTER `tableID`;''')
     cur.execute('''CREATE TABLE `restaurantdb`.`orderdetails` (
             `orderID` INT UNSIGNED NOT NULL,
             `recipeID` INT UNSIGNED NOT NULL,
-            `quantity` DECIMAL(6,2) NOT NULL,
+            `quantity` INT(10) NOT NULL,
             FOREIGN KEY (`orderID`) references orders(`orderID`),
             FOREIGN KEY (`recipeID`) references recipes(`recipeID`));''')
 
@@ -86,45 +89,45 @@ def initialize():
 @app.route('/database/recipes_results/<string:name>', methods=['GET'])
 def recipes_results(name):
     results = database.getRecipesByName(name)
-    return str(results)
+    return jsonify(results)
 
 
 #Returns information of all recipes.
 @app.route('/database/recipes', methods=['GET'])
 def recipes():
     results = database.getRecipes()
-    return str(results)
-
+    return jsonify(results)
 
 #Returns a more in dept information about an order such as ID, DATE, TableID and corresponding recipes with RecipeID and quanitity.
 #If order has no recipes added returns nothing.
 @app.route('/database/order_overview/<string:ID>', methods=['GET'])
-def order_overview(ID):
-    results = database.getOrderOverviewByID(ID)
-    return str(results)
+def order_details(ID):
+    results = database.getOrderDetails(ID)
+    print(results)
+    return jsonify(results)
 
 
 #Returns all orders with more in dept information such as ID, DATE, TableID and corresponding recipes with RecipeID and quanitity.
 #If order has no recipes doesn't show up in list.
 @app.route('/database/orders_overview', methods=['GET'])
 def orders_overview():
-    results = database.getOrdersOverview()
-    return str(results)
+    results = database.getOpenOrders()
+    return jsonify(results)
 
 
 #Returns all orders with basic information such as ID, DATE and TableID
 @app.route('/database/orders', methods=['GET'])
 def orders():
-    results = database.getOrders()
-    return str(results)
+    results = database.getAllOrders()
+    return jsonify(results)
 
 
 #make a new order by using link/neworder?table=number
 @app.route('/database/new_order', methods=['GET'])
 def new_order():
     table = request.args.get('table')
-    database.insertOrder(table)
-    return str("Order has been made!")
+    orderid = database.insertOrder(table)
+    return str("Order has been made! And has ID: " + str(orderid))
 
 
 #http://127.0.0.1:5000/database/order/NUMBER
@@ -132,7 +135,7 @@ def new_order():
 @app.route('/database/order/<string:ID>', methods=['GET'])
 def order(ID):
     results = database.getOrderByID(ID)
-    return str(results)
+    return jsonify(results)
 
 #http://127.0.0.1:5000/database/new_recipe?name=NAAM&price=GETAL&type=SOORT
 @app.route('/database/new_recipe', methods=['POST', 'GET'])
@@ -150,7 +153,7 @@ def add_to_order():
     orderID = request.args.get('orderid')
     quantity = request.args.get('quantity')
     database.addToOrder(recipeID, orderID, quantity)
-    return order_overview(orderID)
+    return order_details(orderID)
 
 #http://127.0.0.1:5000/database/change_table_status?status=STATUS&tableid=NUMBER
 @app.route('/database/change_table_status', methods=['POST', 'GET', 'PUT'])
@@ -162,8 +165,12 @@ def change_table_status():
 
 @app.route('/database/tables', methods=['GET'])
 def tables():
-    return str(database.getTables())
+    return jsonify(database.getTables())
 
+@app.route('/database/table/<string:tableid>')
+def table(tableid):
+    result = database.getTableByID(tableid)
+    return jsonify(result)
 
 
 '''SELECT * FROM orders o JOIN orderdetails details ON o.orderID = details.orderID
