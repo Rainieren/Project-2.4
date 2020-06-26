@@ -23,7 +23,7 @@ class Table:
     def __init__(self, tableID):
         self.tableID = tableID
         self.tableStatus = "free"
-        self.order = Order
+        self.order = 0
 
     def setStatus(self, status):
         self.tableStatus = status
@@ -33,14 +33,24 @@ class Table:
         self.tableStatus = "taken"
 
     def removeOrder(self):
-        self.order = Order
+        self.order = 0
         self.tableStatus = "free"
 
     def getTableID(self):
         return self.tableID
 
+    def getOrder(self):
+        return self.order
+
     def getTableStatus(self):
         return self.tableStatus
+
+    def getPriceTable(self):
+
+        if(self.order != 0):
+            self.order.getOrderTotal()
+
+
 
 
 
@@ -59,6 +69,12 @@ class Order:
 
     def getOrderOverview(self):
         return database.getOrderDetails(self.orderID)
+
+    def getOrderTotal(self):
+        result = database.getOrderDetails(self.orderID)
+        for x in result:
+            print(x)
+        return result
 
     def getOrderID(self):
         return self.orderID

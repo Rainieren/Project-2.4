@@ -1,6 +1,9 @@
 from backend.database import *
 from flask import Flask, request, Response, jsonify
 from flask_mysqldb import MySQL
+import json
+import time
+import requests
 
 app = Flask(__name__)
 
@@ -45,6 +48,7 @@ def startup():
             `orderID` INT UNSIGNED NOT NULL,
             `recipeID` INT UNSIGNED NOT NULL,
             `quantity` INT(10) NOT NULL,
+            `servingStatus` varchar(45) DEFAULT NULL,
             FOREIGN KEY (`orderID`) references orders(`orderID`),
             FOREIGN KEY (`recipeID`) references recipes(`recipeID`));''')
 
@@ -114,6 +118,21 @@ def orders_overview():
     results = database.getOpenOrders()
     return jsonify(results)
 
+@app.route('/database/servings', methods=['GET', 'POST'])
+def get_open_servings():
+    focus = request.args.get('focus')
+    orderID = request.args.get('orderid')
+    results = database.getOpenServingsByOrderID(orderID, focus)
+    return jsonify(results)
+
+@app.route('/database/servings', methods=['PUT', 'GET'])
+def change_serving_status():
+    data = request.get_json()
+    orderID = data['orderID']
+    recipeID = data['recipeID']
+    quantity = data['quantity']
+    database.setServingStatus(orderID, recipeID, quantity)
+    return str('succes')
 
 #Returns all orders with basic information such as ID, DATE and TableID
 @app.route('/database/orders', methods=['GET'])
@@ -128,7 +147,6 @@ def new_order():
     table = request.args.get('table')
     orderid = database.insertOrder(table)
     return str("Order has been made! And has ID: " + str(orderid))
-
 
 #http://127.0.0.1:5000/database/order/NUMBER
 #Returns basic order information such as ID, DATE and TableID
@@ -156,11 +174,12 @@ def add_to_order():
     return order_details(orderID)
 
 #http://127.0.0.1:5000/database/change_table_status?status=STATUS&tableid=NUMBER
-@app.route('/database/change_table_status', methods=['POST', 'GET', 'PUT'])
+@app.route('/database/change_table_status', methods=['GET', 'PUT'])
 def change_table_status():
-    tableID = request.args.get('tableid')
-    status = request.args.get('status')
-    database.setTableStatus(tableID, status)
+    data = request.get_json()
+    tableID = data['tableID']
+    tableStatus = data['tableStatus']
+    database.setTableStatus(tableID, tableStatus)
     return tables()
 
 @app.route('/database/tables', methods=['GET'])

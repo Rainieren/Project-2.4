@@ -12,6 +12,19 @@ class Database:
         cur.execute(select_statement, {'emp_status': status, 'emp_tableid': table})
         self.mysql.connection.commit()
 
+    def setServingStatus(self, orderID, recipeID, quantity):
+        cur = self.mysql.connection.cursor()
+        select_statement = '''SELECT count(*) AS aantal from orderdetails 
+            WHERE orderID = %(emp_orderID)s && recipeID = %(emp_recipeID)s && quantity = %(emp_quantity)s && servingStatus = "open"'''
+        cur.execute(select_statement, {'emp_orderID': orderID, 'emp_recipeID': recipeID, 'emp_quantity': quantity})
+        check_value = cur.fetchall()
+        if check_value[0]['aantal'] != 0:
+            update_statement = '''UPDATE orderdetails SET servingStatus = "served"
+                        WHERE orderID = %(emp_orderID)s && recipeID = %(emp_recipeID)s && quantity = %(emp_quantity)s
+                        LIMIT 1'''
+            cur.execute(update_statement, {'emp_orderID': orderID, 'emp_recipeID': recipeID, 'emp_quantity': quantity})
+            self.mysql.connection.commit()
+
     def setOrderStatus(self, ID, status):
         cur = self.mysql.connection.cursor()
         select_statement = '''UPDATE orders SET orderStatus = %(emp_status)s WHERE orderID = %(emp_id)s;'''
@@ -38,7 +51,7 @@ class Database:
 
     def addToOrder(self, recipeID, orderID, quantity):
         cur = self.mysql.connection.cursor()
-        select_statement = '''INSERT INTO orderdetails(orderID, quantity, recipeID) VALUES (%(emp_orderid)s, %(emp_quantity)s, %(emp_recipeid)s)'''
+        select_statement = '''INSERT INTO orderdetails(orderID, quantity, recipeID, servingStatus) VALUES (%(emp_orderid)s, %(emp_quantity)s, %(emp_recipeid)s, "open")'''
         cur.execute(select_statement, {'emp_orderid': orderID, 'emp_quantity': quantity, 'emp_recipeid': recipeID})
         self.mysql.connection.commit()
 
@@ -59,6 +72,21 @@ class Database:
                     ON recipes.recipeID = orderdetails.recipeID
                     GROUP BY orderID;'''
         cur.execute(select_statement)
+        results = cur.fetchall()
+        return results
+
+    def getOpenServingsByOrderID(self, orderID, focus):
+        cur = self.mysql.connection.cursor()
+        if(focus == 'all'):
+            select_statement = '''SELECT orderdetails.recipeID, orderdetails.quantity, servingStatus, recipeFocus FROM orderdetails 
+            LEFT JOIN recipes ON orderdetails.recipeID = recipes.recipeID
+            WHERE orderID = %(emp_oid)s && servingStatus = "open"'''
+            cur.execute(select_statement, {'emp_oid': orderID, 'emp_focus': focus})
+        else:
+            select_statement = '''SELECT orderdetails.recipeID, orderdetails.quantity, servingStatus, recipeFocus FROM orderdetails 
+            LEFT JOIN recipes ON orderdetails.recipeID = recipes.recipeID
+            WHERE orderID = %(emp_oid)s && recipes.recipeFocus = %(emp_focus)s && servingStatus = "open"'''
+            cur.execute(select_statement, {'emp_oid': orderID, 'emp_focus': focus})
         results = cur.fetchall()
         return results
 
