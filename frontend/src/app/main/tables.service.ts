@@ -24,7 +24,7 @@ export class TablesService implements OnInit {
   }
 
   addOrder(): void {
-    setTimeout(() => this.fetchNewList(), 10000);
+    setTimeout(() => this.fetchNewList(), 1000);
   }
 
   fetchNewList() {

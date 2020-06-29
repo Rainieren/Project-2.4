@@ -14,13 +14,10 @@ export class OrdersService implements OnInit {
     this._httpApiService.getOrdersFromServer().then(data => {
       this.orders = data['orders'];
     });
-
-    this.fetchData();
-
   }
 
   ngOnInit(): void {
-
+    this.fetchData();
   }
 
   fetchData() {

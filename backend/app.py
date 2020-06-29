@@ -136,9 +136,14 @@ def return_table_info():
                             'all_orders': get_orders(int(table_number))
                             })
         response.headers.add('Access-Control-Allow-Origin', '*')
+        print()
         return response
     except NameError:
-        return jsonify({'message': 'ERROR'})
+        print("error")
+        resposne = jsonify({'message': 'ERROR'})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+
+        return response
 
 
 @app.route('/api/get_all_products', methods=['GET'])
@@ -198,7 +203,7 @@ def add_new_order():
     orders.append(data)
 
     add_order(int(data['table']), data['orders'])
-    print(data['table'])
+    print(data['orders'])
 
     response = jsonify({'message': 'OK'})
     response.headers.add('Access-Control-Allow-Origin', '*')

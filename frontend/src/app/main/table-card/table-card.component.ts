@@ -28,16 +28,10 @@ export class TableCardComponent implements OnInit {
     public _httpApiService: HttpApiService
     ) {
     this.tableInfo = {all_orders: [], has_order: false, price: 0, waiting_orders: Array(0)}
-    console.log(this.tableInfo);
-    this._httpApiService.getTableInfo(this.tableNumber).then(data => {
-      this.tableInfo = data;
-    });
-
     this.fetchData();
   }
 
   ngOnInit(): void {
-    this.fetchData();
   }
 
   setHasWaitingOrder(status: boolean): void {
@@ -45,14 +39,11 @@ export class TableCardComponent implements OnInit {
   }
 
   fetchData() {
-    interval(3000).subscribe(data => {
+    interval(10000).subscribe(data => {
       this._httpApiService.getTableInfo(this.tableNumber).then(data => {
         this.tableInfo = data;
       });
     });
-  }
-
-  checkValues() {
-    
+    console.log(this.tableInfo);
   }
 }
