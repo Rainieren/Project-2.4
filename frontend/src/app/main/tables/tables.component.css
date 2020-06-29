@@ -24,3 +24,28 @@
 .table-card-link:hover {
   text-decoration: none;
 }
+.active-container {
+  display: flex;
+  align-items: center;
+}
+
+.active-label {
+  margin: 0 0 0 10px;
+}
+.circle-red {
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  background-color: red;
+  content: '';
+  display: block;
+}
+
+.circle-green {
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  background-color: lawngreen;
+  content: '';
+  display: block;
+}
