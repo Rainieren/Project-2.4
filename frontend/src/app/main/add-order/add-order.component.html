@@ -2,7 +2,7 @@
   <div class="row my-5">
     <div class="col-6">
       <h2>Nieuwe bestelling</h2>
-      <p>Maak een nieuwe bestelling aan door beneden de tafel en produten aan te geven.</p>
+      <p>Maak een nieuwe bestelling aan door een tafel te selecteren en producten toe te voegen.</p>
     </div>
     <div class="col-6 text-right">
       <button type="submit" class="btn btn-primary"><span class="mr-3"><fa-icon [icon]="faClipboard"></fa-icon></span>Bestelling plaatsen</button>
@@ -21,7 +21,7 @@
     </div>
   <hr>
   <h3 class="mt-5">Kies producten:</h3>
-  <small >Klein idee: Is het misshien een idee om dit onder te verdelen in categorieën? Dus pizzas, broodjes, dranken etc</small>
+  <!--<small >Klein idee: Is het misshien een idee om dit onder te verdelen in categorieën? Dus pizzas, broodjes, dranken etc</small>-->
     <div class="products my-5">
       <ng-container *ngFor="let menuItem of _menuItemsService.menuItems; let i = index">
         <div class="form-group form-row">
