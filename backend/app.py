@@ -113,8 +113,8 @@ def serve_order_from_list(order_id):
 
 def get_waiting_order(table_number):
     for order in orders:
-        if order['table'] == table_number:
-            return order
+        if int(order['table']) == int(table_number):
+            return order['orders']
 
     return []
 
@@ -152,6 +152,7 @@ def return_all_tables():
 
 @app.route('/api/get_current_orders', methods=['GET'])
 def get_current_orders():
+
     response = jsonify({'orders': orders})
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
@@ -289,4 +290,4 @@ def auth():
     
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)

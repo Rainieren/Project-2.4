@@ -31,8 +31,10 @@ export class TableCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this._httpApiService.getTableInfo(this.tableNumber).then(data => {
       this.tableInfo = data;
+      console.log(data);
     });
     //this.waitingOrders = this._orderService.getOrder(this.tableNumber);
 
@@ -46,6 +48,6 @@ export class TableCardComponent implements OnInit {
   }
 
   checkValues() {
-    console.log(this.tableInfo['all_orders'][0].length);
+    console.log(this.tableInfo['waiting_orders']);
   }
 }

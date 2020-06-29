@@ -1,6 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Order } from 'src/app/main/order';
 import { HttpApiService } from './http-api.service';
+import { interval } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +14,20 @@ export class OrdersService implements OnInit {
     this._httpApiService.getOrdersFromServer().then(data => {
       this.orders = data['orders'];
     });
+    this.fetchData();
   }
 
   ngOnInit(): void {
+  
+  }
 
+  fetchData() {
+    interval(10000).subscribe(data => {
+      console.log("test");
+      this._httpApiService.getOrdersFromServer().then(data => {
+        this.orders = data['orders'];
+      });
+    });
   }
 
   serveOrder(OrderId: number): void {
