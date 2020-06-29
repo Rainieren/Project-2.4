@@ -4,15 +4,17 @@
       <div class="col-md-6">
         <div class="card shadow" id="card">
           <div class="card-body">
-            <div class="row">
-              <div class="col-10">
-                <h3 class="card-title mb-0">Tafel {{ table.id }}</h3>
-                <p class="m-0">Actief: Nee</p>
+            <a class="table-card-link" href="">
+              <div class="row">
+                <div class="col-10">
+                  <h3 class="card-title mb-0">Tafel {{ table.id }}</h3>
+                  <p class="m-0">Actief: Nee</p>
+                </div>
+                <div class="col-2 d-flex flex-column justify-content-center align-items-center">
+                  <fa-icon [icon]="faArrowRight"></fa-icon>
+                </div>
               </div>
-              <div class="col-2 d-flex flex-column justify-content-center align-items-center">
-                <fa-icon [icon]="faArrowRight"></fa-icon>
-              </div>
-            </div>
+            </a>
 
             <!--              <a href="#" id="button" class="btn btn-primary">Afrekenen</a>-->
             <!--              <a href="#" id="button" class="btn btn-primary">Bestelling toevoegen</a>-->
