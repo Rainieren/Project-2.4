@@ -15,6 +15,8 @@ import { LoginComponent } from './auth/login/login.component';
 import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/auth.guard';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -45,6 +47,7 @@ export function tokenGetter() {
     }),
     HttpClientModule,
     FontAwesomeModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   providers: [
     AuthService,
