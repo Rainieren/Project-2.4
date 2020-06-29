@@ -1,12 +1,19 @@
+import jwt
+import datetime
+import jwt
+import datetime
+from flask_cors import CORS
+
 from backend.database import *
-from flask import Flask, request, Response, jsonify
+from flask import Flask, request, Response, jsonify, make_response
 from flask_mysqldb import MySQL
 import json
 import time
 import requests
 
 app = Flask(__name__)
-
+CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'root'
@@ -16,8 +23,15 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 state = "startup";
 mysql = MySQL(app)
-
+# JWT
+app.config['SECRET_KEY'] = 'thisistheverysecretkeythatnooneshouldeverfind'  # nog te veranderen
 database = Database(app, mysql)
+
+users = [
+    {'id': 1, 'role': 'counter', 'password': 'counter'},
+    {'id': 2, 'role': 'keuken', 'password': 'keuken'},
+    {'id': 3, 'role': 'serveerder', 'password': 'serveerder'},
+]
 
 @app.route('/database/startup')
 def startup():
@@ -88,51 +102,56 @@ def initialize():
                 ''')
     mysql.connection.commit()
 
+#RECIPES
+#RECIPES
 
-#Returns information about all recipes matching partially with the given name.
-@app.route('/database/recipes_results/<string:name>', methods=['GET'])
-def recipes_results(name):
-    results = database.getRecipesByName(name)
+#http://127.0.0.1:5000/database/recipe
+@app.route('/database/recipe', methods=['POST'])
+def new_recipe():
+    data = request.get_json()
+    name = data['name']
+    price = data['price']
+    type = data['type']
+    focus = data['focus']
+    database.insertRecipe(name, price, type, focus)
+    return "succes"
+
+@app.route('/database/recipe/<string:recipeID>', methods=['GET'])
+def recipe(recipeID):
+    results = database.getRecipeByRecipeID(recipeID)
     return jsonify(results)
-
 
 #Returns information of all recipes.
-@app.route('/database/recipes', methods=['GET'])
+@app.route('/database/recipes', methods=['GET', 'POST'])
 def recipes():
-    results = database.getRecipes()
+    if(request.method == "GET"):
+        response = jsonify({'recipes': database.getRecipes()})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+    if(request.method == "POST"):
+        data = request.get_json()
+        searchterm = data['searchterm']
+        results = database.getRecipesByName(searchterm)
+        response = jsonify(results)
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
+#ORDERS
+#ORDERS
+
+#Returns basic order information such as ID, DATE and TableID
+@app.route('/database/order/<string:ID>', methods=['GET'])
+def order(ID):
+    results = database.getOrderByID(ID)
     return jsonify(results)
 
-#Returns a more in dept information about an order such as ID, DATE, TableID and corresponding recipes with RecipeID and quanitity.
-#If order has no recipes added returns nothing.
-@app.route('/database/order_overview/<string:ID>', methods=['GET'])
-def order_details(ID):
-    results = database.getOrderDetails(ID)
-    print(results)
-    return jsonify(results)
-
-
-#Returns all orders with more in dept information such as ID, DATE, TableID and corresponding recipes with RecipeID and quanitity.
-#If order has no recipes doesn't show up in list.
-@app.route('/database/orders_overview', methods=['GET'])
-def orders_overview():
-    results = database.getOpenOrders()
-    return jsonify(results)
-
-@app.route('/database/servings', methods=['GET', 'POST'])
-def get_open_servings():
-    focus = request.args.get('focus')
-    orderID = request.args.get('orderid')
-    results = database.getOpenServingsByOrderID(orderID, focus)
-    return jsonify(results)
-
-@app.route('/database/servings', methods=['PUT', 'GET'])
-def change_serving_status():
+#make a new order by using link/order
+@app.route('/database/order', methods=['POST'])
+def new_order():
     data = request.get_json()
-    orderID = data['orderID']
-    recipeID = data['recipeID']
-    quantity = data['quantity']
-    database.setServingStatus(orderID, recipeID, quantity)
-    return str('succes')
+    tableid = data['tableid']
+    orderid = database.insertOrder(tableid)
+    return jsonify({"orderid": orderid})
 
 #Returns all orders with basic information such as ID, DATE and TableID
 @app.route('/database/orders', methods=['GET'])
@@ -140,56 +159,106 @@ def orders():
     results = database.getAllOrders()
     return jsonify(results)
 
-
-#make a new order by using link/neworder?table=number
-@app.route('/database/new_order', methods=['GET'])
-def new_order():
-    table = request.args.get('table')
-    orderid = database.insertOrder(table)
-    return str("Order has been made! And has ID: " + str(orderid))
-
-#http://127.0.0.1:5000/database/order/NUMBER
-#Returns basic order information such as ID, DATE and TableID
-@app.route('/database/order/<string:ID>', methods=['GET'])
-def order(ID):
-    results = database.getOrderByID(ID)
+#Returns all orders with more in dept information such as ID, DATE, TableID and corresponding recipes with RecipeID and quanitity.
+#If order has no servings doesn't show up in list.
+@app.route('/database/orders/overview', methods=['GET'])
+def orders_overview():
+    results = database.getOpenOrders()
     return jsonify(results)
 
-#http://127.0.0.1:5000/database/new_recipe?name=NAAM&price=GETAL&type=SOORT
-@app.route('/database/new_recipe', methods=['POST', 'GET'])
-def new_recipe():
-    name = request.args.get('name')
-    price = request.args.get('price')
-    type = request.args.get('type')
-    database.insertRecipe(name, price, type)
-    return recipes_results(name)
+@app.route('/database/order/<string:orderid>/price', methods=['GET'])
+def get_price_order(orderid):
+    results = database.getPriceOfOrder(orderid)
+    return jsonify(results)
 
-#http://127.0.0.1:5000/database/add_to_order?recipeid=NUMBER&orderid=NUMBER&quantity=NUMBER
-@app.route('/database/add_to_order', methods=['POST', 'GET'])
-def add_to_order():
-    recipeID = request.args.get('recipeid')
-    orderID = request.args.get('orderid')
-    quantity = request.args.get('quantity')
-    database.addToOrder(recipeID, orderID, quantity)
-    return order_details(orderID)
+#SERVINGS
+#SERVINGS
 
-#http://127.0.0.1:5000/database/change_table_status?status=STATUS&tableid=NUMBER
-@app.route('/database/change_table_status', methods=['GET', 'PUT'])
-def change_table_status():
-    data = request.get_json()
-    tableID = data['tableID']
-    tableStatus = data['tableStatus']
-    database.setTableStatus(tableID, tableStatus)
-    return tables()
+#Returns a more in dept information about an order such as ID, DATE, TableID and corresponding recipes with RecipeID and quanitity.
+#If order has no recipes added returns nothing.
+@app.route('/database/order/<string:orderID>/servings', methods=['GET', 'POST'])
+def order_servings(orderID):
+    if(request.method == "GET"):
+        results = database.getOrderDetails(orderID)
+        print(results)
+        return jsonify(results)
+    if(request.method == "POST"):
+        data = request.get_json()
+        recipeID = data['recipeID']
+        quantity = data['quantity']
+        database.addToOrder(recipeID, orderID, quantity)
+
+@app.route('/database/order/<string:orderID>/servings/<string:state>', methods=['GET', 'POST', 'PUT'])
+def open_order_servings(orderID, state):
+    if(request.method == "PUT"):
+        data = request.get_json()
+        recipeID = data['recipeID']
+        quantity = data['quantity']
+        database.setServingStatus(orderID, recipeID, quantity, state)
+        return "succes"
+    if(request.method == "POST"):
+        data = request.get_json()
+        focus = data['focus']
+        results = database.getServingsByOrderID(orderID, focus, state)
+        return jsonify({"orders": results})
+    if(request.method == "GET"):
+        results = database.getServingsByOrderID(orderID, 'all', state)
+        return jsonify({"orders": results})
+
+#TABLES
+#TABLES
 
 @app.route('/database/tables', methods=['GET'])
 def tables():
-    return jsonify(database.getTables())
+    response = jsonify({'tables':database.getTables()})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
-@app.route('/database/table/<string:tableid>')
+@app.route('/database/table/<string:tableid>', methods=['GET', 'PUT'])
 def table(tableid):
-    result = database.getTableByID(tableid)
-    return jsonify(result)
+    if(request.method == "GET"):
+        result = database.getTableByID(tableid)
+        return jsonify(result)
+    if(request.method == "PUT"):
+        data = request.get_json()
+        tableStatus = data['tableStatus']
+        database.setTableStatus(tableid, tableStatus)
+        return tables()
+
+@app.route('/database/table/<string:tableid>/servings/<string:state>', methods=['GET'])
+def get_servings_table(tableid, state):
+    results = database.getServingsOfTableByTableID(tableid, state)
+    return jsonify(results)
+
+#JWT
+#JWT
+
+@app.route('/database/auth', methods=['GET', 'POST'])
+def auth():
+    # checking if request contains JSON
+    if not request.is_json:
+        return jsonify({"msg": "Missing JSON in request"}), 400
+
+    # setting role
+    role = request.json.get('role', None)
+
+    # searching if user exists
+    for i, j in enumerate(users):
+        if (role == j['role']):
+            # when user existst, store user in 'user'
+            user = users[i]
+            # check if password is correct
+            if user['password'] == request.json.get('password', None):
+                # if so, generate and return token
+                token = jwt.encode({'id': user['id'], 'role': role,
+                                    'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)},
+                                   app.config['SECRET_KEY'])
+                return jsonify({'token': token.decode('UTF-8')})
+
+    # else, return error
+    return make_response('Could not verify', 401)
+
+
 
 
 '''SELECT * FROM orders o JOIN orderdetails details ON o.orderID = details.orderID
