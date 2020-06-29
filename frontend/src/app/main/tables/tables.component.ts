@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { TablesService } from '../tables.service';
 
 @Component({
   selector: 'app-tables',
@@ -10,7 +11,7 @@ export class TablesComponent {
   tables: any;
   faArrowRight = faArrowRight;
 
-  constructor() {
+  constructor(public _tableService: TablesService, ) {
     this.tables = [{
       id: 1, orders: []
     },
