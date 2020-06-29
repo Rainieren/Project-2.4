@@ -3,6 +3,7 @@ import { OrdersService } from '../orders.service';
 import { MenuItemsService } from '../menu-items.service';
 import { TablesService } from '../tables.service';
 import { HttpApiService } from '../http-api.service';
+import { faClipboard} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
   selector: 'app-add-order',
@@ -11,16 +12,17 @@ import { HttpApiService } from '../http-api.service';
 })
 export class AddOrderComponent implements OnInit {
   tables: any;
+  faClipboard = faClipboard;
   show = false;
 
   constructor(
-    public _ordersService: OrdersService, 
-    public _menuItemsService: MenuItemsService, 
-    public _tablesService: TablesService, 
+    public _ordersService: OrdersService,
+    public _menuItemsService: MenuItemsService,
+    public _tablesService: TablesService,
     ) { }
 
   ngOnInit(): void {
-    
+
   }
 
   newOrder(value) {
@@ -33,14 +35,14 @@ export class AddOrderComponent implements OnInit {
       if(value[key] != "" && key != "table") {
         items.push({itemId: itemCounter, amount: value[key]});
         itemCounter++;
-      } 
+      }
 
       if(value[key] == "" && key != "table") {
         items.push({itemId: itemCounter, amount: 0});
         itemCounter++;
       }
     }
-    
+
     this._ordersService.createOrder({table: value.table, items: items});
     this._tablesService.addOrder();
 

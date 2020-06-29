@@ -1,28 +1,31 @@
 <div class="container">
+  <div class="search-block text-center my-5">
+    <h4>Filter op afdeling</h4>
     <form id="filter-div" #options="ngForm" (ngSubmit)="filterResults(options.value)">
-        <h4>Filter</h4>
-        <select class="form-control form-control-sm" name="filter" ngModel>
-            <option>Geen</option>
-            <option>Counter</option>
-            <option>Keuken</option>
-        </select>
-        <button type="submit" id="filter-button" class="btn btn-primary">Toepassen</button>
+      <select class="form-control form-control-sm" name="filter" ngModel>
+        <option>Geen</option>
+        <option>Counter</option>
+        <option>Keuken</option>
+      </select>
+      <button type="submit" id="filter-button" class="btn btn-primary"><fa-icon [icon]="faSearch"></fa-icon></button>
     </form>
+  </div>
+
     <ng-container *ngFor="let order of this._ordersService.orders; let i = index">
         <div class="card">
             <div class="card-body">
             <h5 class="card-title">Bestelling #{{ order.order_id }}</h5>
             <h6 class="card-subtitle mb-2 text-muted">Tafel {{ order.table }}</h6>
             <ul class="list-group list-group-flush">
-                <ng-container *ngFor="let item of order.orders"> 
+                <ng-container *ngFor="let item of order.orders">
                     <li class="list-group-item" *ngIf="getCurrentFilter() == _menuItemsService.getFocus(item.itemId) && item.amount != 0">
                         {{ _menuItemsService.getMenuItem(item.itemId) }}<span class="badge badge-secondary badge-pill" style="float: right;">{{ item.amount }}</span>
-                    </li> 
+                    </li>
                 </ng-container>
-                <ng-container *ngFor="let item of order.orders"> 
+                <ng-container *ngFor="let item of order.orders">
                     <li class="list-group-item" *ngIf="getCurrentFilter() == null && item.amount != 0">
                         {{ _menuItemsService.getMenuItem(item.itemId) }}<span class="badge badge-secondary badge-pill" style="float: right;">{{ item.amount }}</span>
-                    </li> 
+                    </li>
                 </ng-container>
             </ul>
             <button type="button" class="btn btn-outline-primary" (click)="serveOrder(order.order_id)">Serveer</button>

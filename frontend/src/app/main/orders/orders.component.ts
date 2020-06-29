@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { OrdersService } from '../orders.service';
 import { MenuItemsService } from '../menu-items.service';
 import { HttpApiService } from '../http-api.service';
+import { faSearch} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
   selector: 'app-orders',
@@ -11,8 +12,9 @@ import { HttpApiService } from '../http-api.service';
 export class OrdersComponent implements OnInit {
   public orders;
   currentFilter = null;
+  faSearch = faSearch;
 
-  constructor(public _ordersService: OrdersService, public _menuItemsService: MenuItemsService, private _httpApiService: HttpApiService) { 
+  constructor(public _ordersService: OrdersService, public _menuItemsService: MenuItemsService, private _httpApiService: HttpApiService) {
   }
 
   ngOnInit(): void {
@@ -26,7 +28,7 @@ export class OrdersComponent implements OnInit {
 
   filterResults(arg): void {
     if(arg.filter == "Geen") {
-      this.currentFilter = null; 
+      this.currentFilter = null;
     }
 
     if(arg.filter == "Counter") {

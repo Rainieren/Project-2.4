@@ -1,21 +1,35 @@
 <form class="container" #options="ngForm" (ngSubmit)="newOrder(options.value)">
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <label class="input-group-text" for="inputGroupSelect01">Tafel</label>
-        </div>
-        <select required class="custom-select form-control-lg" name="table" ngModel>
+  <div class="row my-5">
+    <div class="col-6">
+      <h2>Nieuwe bestelling</h2>
+      <p>Maak een nieuwe bestelling aan door beneden de tafel en produten aan te geven.</p>
+    </div>
+    <div class="col-6 text-right">
+      <button type="submit" class="btn btn-primary"><span class="mr-3"><fa-icon [icon]="faClipboard"></fa-icon></span>Bestelling plaatsen</button>
+    </div>
+  </div>
+
+
+  <h3 class="my-5">Kies een tafel</h3>
+    <div class="form-group form-row">
+        <label class="col-10" for="inputGroupSelect01">Tafel</label>
+        <select required class="custom-select form-control-lg col-2" name="table" ngModel>
             <ng-container *ngFor="let table of _tablesService.tables; let i = index">
                 <option>{{ table.tableNumber }}</option>
             </ng-container>
         </select>
     </div>
-    <ng-container *ngFor="let menuItem of _menuItemsService.menuItems; let i = index">
-        <div class="form-group">
-            <label for="formGroupExampleInput">{{ menuItem.name }}</label>
-            <input type="number" value="0" class="form-control" name="{{ menuItem.name }}" ngModel>
+  <hr>
+  <h3 class="mt-5">Kies producten:</h3>
+  <small >Klein idee: Is het misshien een idee om dit onder te verdelen in categorieën? Dus pizzas, broodjes, dranken etc</small>
+    <div class="products my-5">
+      <ng-container *ngFor="let menuItem of _menuItemsService.menuItems; let i = index">
+        <div class="form-group form-row">
+          <label class="col-10" for="formGroupExampleInput">{{ menuItem.name }}</label>
+          <input type="number" value="0" placeholder="0" class="form-control col-2" name="{{ menuItem.name }}" ngModel>
         </div>
-    </ng-container>
-    <button type="submit" class="btn btn-primary">Bestelling plaatsen</button>
+      </ng-container>
+    </div>
 </form>
 <ngb-toast id="toast" class="bg-success text-light" *ngIf="show" [autohide]="false">
     Bestelling succesvol toegevoegd!

@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-tables',
@@ -6,7 +7,8 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./tables.component.css']
 })
 export class TablesComponent {
-  tables: any; 
+  tables: any;
+  faArrowRight = faArrowRight;
 
   constructor() {
     this.tables = [{
